@@ -19,10 +19,7 @@ export type TPage = FromSchema<typeof plainPage> & {
   $prev?: TPage;
   $siblings: TPage[];
   branch: TPage[];
-  buffer?: string;
   children?: TPage[];
-  contenteditable: boolean;
-  html: Promise<string> | string;
   i: string;
   index: number;
   next?: TPage;
@@ -30,7 +27,6 @@ export type TPage = FromSchema<typeof plainPage> & {
   path: string;
   prev?: TPage;
   root: TPage;
-  sfc: Promise<string>;
   siblings: TPage[];
   title: string;
   to: string;
