@@ -39,11 +39,6 @@ const properties = {
   header: { default: null, nullable, type: "string" },
   icon: { default: null, nullable, type: "string" },
   id: { type: "string" },
-  image: {
-    default: [],
-    items: { type: "string" },
-    type: "array",
-  },
   images: {
     default: [],
     items: {
