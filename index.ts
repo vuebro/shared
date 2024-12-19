@@ -24,12 +24,12 @@ export type TPage = FromSchema<typeof plainPage> & {
   index: number;
   next?: TPage;
   parent?: TPage;
-  path: string;
+  path?: string;
   prev?: TPage;
   root: TPage;
   siblings: TPage[];
   title: string;
-  to: string;
+  to?: string;
 };
 dynamicDefaults.DEFAULTS.uuid = (): (() => string) => () => v4();
 export type TCredentials = FromSchema<typeof Credentials>;
@@ -101,7 +101,7 @@ const path = {
 const to = {
   get(this: TPage) {
     return (this.loc?.replaceAll(" ", "_") ?? this.path)
-      .replace(/^\/?/, "/")
+      ?.replace(/^\/?/, "/")
       .replace(/\/?$/, "/");
   },
 };
