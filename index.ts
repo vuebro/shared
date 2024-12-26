@@ -91,11 +91,13 @@ const $next = {
 };
 const path = {
   get(this: TPage) {
-    return this.branch
-      .slice(1)
-      .map(({ name }) => name ?? "-")
-      .join("/")
-      .replaceAll(" ", "_");
+    const branch = this.branch.slice(1);
+    return branch.some(({ name }) => !name)
+      ? undefined
+      : branch
+          .map(({ name }) => name)
+          .join("/")
+          .replaceAll(" ", "_");
   },
 };
 const to = {
