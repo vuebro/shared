@@ -8,7 +8,7 @@
     "build": "bun --bun build.ts"
   },
   "dependencies": {
-    "@vues3/flat-json-tree": "^0.3.4",
+    "@vues3/flat-json-tree": "^0.3.5",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "bun-plugin-dts": "^0.3.0",
