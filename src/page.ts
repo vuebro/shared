@@ -1,11 +1,8 @@
-import type { JSONSchema } from "json-schema-to-ts";
-
 const $id = "urn:jsonschema:page";
 const additionalProperties = false;
 const nullable = true;
 const id = "uuid";
 const dynamicDefaults = { id };
-const children = { default: [], items: { $ref: "#" }, type: "array" } as const;
 const properties = {
   along: { default: true, type: "boolean" },
   alt: {
@@ -27,6 +24,11 @@ const properties = {
     ],
     nullable,
     type: "string",
+  },
+  children: {
+    default: [],
+    items: { type: "object" },
+    type: "array",
   },
   class: {
     default: [],
@@ -79,17 +81,10 @@ const properties = {
 } as const;
 const type = "object";
 
-export const plainPage = {
-  $id,
-  additionalProperties,
-  properties,
-  type,
-} as const satisfies JSONSchema;
-
 export default {
   $id,
   additionalProperties,
   dynamicDefaults,
-  properties: { children, ...properties },
+  properties,
   type,
 } as const;
