@@ -10,16 +10,16 @@ import { reactive, watch } from "vue";
 import Credentials from "./src/credentials";
 import Data from "./src/data";
 import Importmap from "./src/importmap";
-import Page, { plainPage } from "./src/page";
+import Page from "./src/page";
 
-export type TPage = FromSchema<typeof plainPage> & {
+export type TPage = FromSchema<typeof Page> & {
   $children?: TPage[];
   $index: number;
   $next?: TPage;
   $prev?: TPage;
   $siblings: TPage[];
   branch: TPage[];
-  children?: TPage[];
+  children: TPage[];
   i: string;
   index: number;
   next?: TPage;
@@ -40,7 +40,7 @@ const ajv = (() => {
   const coerceTypes = true;
   const keywords = [dynamicDefaults()];
   const removeAdditional = true;
-  const schemas = [Credentials, Page, Data, Importmap];
+  const schemas = [Credentials, Data, Page, Importmap];
   const useDefaults = true;
   return new Ajv({
     code,
@@ -51,7 +51,6 @@ const ajv = (() => {
     useDefaults,
   });
 })();
-export const validatePage = ajv.getSchema("urn:jsonschema:page");
 export const validateCredentials = ajv.getSchema("urn:jsonschema:credentials");
 const validateData = ajv.getSchema("urn:jsonschema:data");
 const validateImportmap = ajv.getSchema("urn:jsonschema:importmap");
@@ -66,7 +65,7 @@ export const { leaves: pages } = flatJsonTree as unknown as {
 };
 const $children = {
   get(this: TPage) {
-    return this.children?.filter(({ enabled }) => enabled);
+    return this.children.filter(({ enabled }) => enabled);
   },
 };
 const $siblings = {
@@ -117,7 +116,7 @@ const title = {
     return this.header ?? this.name;
   },
 };
-watch(data, (value) => {
+watch(pages, (value) => {
   validateData?.(value) as boolean;
 });
 watch(importmap, (value) => {
