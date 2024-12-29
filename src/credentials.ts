@@ -6,7 +6,6 @@ const additionalProperties = {
   properties: {
     accessKeyId: { default: null, nullable, type: "string" },
     Bucket: { default: null, nullable, type: "string" },
-    domain: { default: null, nullable, type: "string" },
     endpoint: { default: null, nullable, type: "string" },
     region: { default: null, nullable, type: "string" },
     secretAccessKey: { default: null, nullable, type: "string" },
