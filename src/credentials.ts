@@ -21,7 +21,7 @@ const type: JSONSchemaType = "object";
 
 /* -------------------------------------------------------------------------- */
 
-const additionalProperties: JSONSchema = {
+const additionalProperties: object = {
   properties: {
     accessKeyId: { default: null, nullable, type: "string" },
     Bucket: { default: null, nullable, type: "string" },
@@ -34,7 +34,7 @@ const additionalProperties: JSONSchema = {
 
 /* -------------------------------------------------------------------------- */
 
-const credentials = {
+const credentials: object = {
   $id,
   additionalProperties,
   type,
