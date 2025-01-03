@@ -13,7 +13,7 @@ const $id = "urn:jsonschema:data";
 
 /* -------------------------------------------------------------------------- */
 
-const items: object = { $ref: "urn:jsonschema:page" };
+const items = { $ref: "urn:jsonschema:page" };
 
 /* -------------------------------------------------------------------------- */
 
@@ -21,7 +21,7 @@ const type: JSONSchemaType = "array";
 
 /* -------------------------------------------------------------------------- */
 
-const data: object = { $id, items, type } as const satisfies JSONSchema;
+const data = { $id, items, type } as const satisfies JSONSchema;
 
 /* -------------------------------------------------------------------------- */
 /*                                   Exports                                  */
