@@ -174,7 +174,7 @@ const title: PropertyDescriptor = {
 /*                                 References                                 */
 /* -------------------------------------------------------------------------- */
 
-const importmap: Reactive<TImportmap> = reactive({});
+const importmap: Reactive<TImportmap> = reactive({} as TImportmap);
 
 /* -------------------------------------------------------------------------- */
 
