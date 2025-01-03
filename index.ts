@@ -30,23 +30,22 @@ type TImportmap = FromSchema<typeof Importmap>;
 /* -------------------------------------------------------------------------- */
 
 type TPage = FromSchema<typeof Page> & {
-  $children?: TPage[];
+  $children: TPage[];
   $index: number;
-  $next?: TPage;
-  $prev?: TPage;
+  $next: null | TPage;
+  $prev: null | TPage;
   $siblings: TPage[];
   branch: TPage[];
   children: TPage[];
-  i: string;
+  i: null | string;
   index: number;
-  next?: TPage;
-  parent?: TPage;
-  path?: string;
-  prev?: TPage;
-  root: TPage;
+  next: null | TPage;
+  parent: null | TPage;
+  path: null | string;
+  prev: null | TPage;
   siblings: TPage[];
-  title: string;
-  to?: string;
+  title: null | string;
+  to: null | string;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -124,7 +123,7 @@ const $index: PropertyDescriptor = {
 
 const $prev: PropertyDescriptor = {
   get(this: TPage) {
-    return this.$siblings[this.$index - 1];
+    return this.$siblings[this.$index - 1] ?? null;
   },
 };
 
@@ -132,7 +131,7 @@ const $prev: PropertyDescriptor = {
 
 const $next: PropertyDescriptor = {
   get(this: TPage) {
-    return this.$siblings[this.$index + 1];
+    return this.$siblings[this.$index + 1] ?? null;
   },
 };
 
@@ -142,7 +141,7 @@ const path: PropertyDescriptor = {
   get(this: TPage) {
     const branch = this.branch.slice(1);
     return branch.some(({ name }) => !name)
-      ? undefined
+      ? null
       : branch
           .map(({ name }) => name)
           .join("/")
@@ -154,9 +153,11 @@ const path: PropertyDescriptor = {
 
 const to: PropertyDescriptor = {
   get(this: TPage) {
-    return (this.loc?.replaceAll(" ", "_") ?? this.path)
-      ?.replace(/^\/?/, "/")
-      .replace(/\/?$/, "/");
+    return (
+      (this.loc?.replaceAll(" ", "_") ?? this.path)
+        ?.replace(/^\/?/, "/")
+        .replace(/\/?$/, "/") ?? null
+    );
   },
 };
 
