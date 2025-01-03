@@ -1,8 +1,27 @@
+/* -------------------------------------------------------------------------- */
+/*                                   Imports                                  */
+/* -------------------------------------------------------------------------- */
+
 import type { JSONSchema } from "json-schema-to-ts";
+import type { JSONSchemaType } from "json-schema-to-ts/lib/types/definitions/jsonSchema";
+
+/* -------------------------------------------------------------------------- */
+/*                                  Constants                                 */
+/* -------------------------------------------------------------------------- */
 
 const $id = "urn:jsonschema:credentials";
+
+/* -------------------------------------------------------------------------- */
+
 const nullable = true;
-const additionalProperties = {
+
+/* -------------------------------------------------------------------------- */
+
+const type: JSONSchemaType = "object";
+
+/* -------------------------------------------------------------------------- */
+
+const additionalProperties: JSONSchema = {
   properties: {
     accessKeyId: { default: null, nullable, type: "string" },
     Bucket: { default: null, nullable, type: "string" },
@@ -10,12 +29,21 @@ const additionalProperties = {
     region: { default: null, nullable, type: "string" },
     secretAccessKey: { default: null, nullable, type: "string" },
   },
-  type: "object",
+  type,
 } as const;
-const type = "object";
 
-export default {
+/* -------------------------------------------------------------------------- */
+
+const credentials = {
   $id,
   additionalProperties,
   type,
 } as const satisfies JSONSchema;
+
+/* -------------------------------------------------------------------------- */
+/*                                   Exports                                  */
+/* -------------------------------------------------------------------------- */
+
+export default credentials;
+
+/* -------------------------------------------------------------------------- */
