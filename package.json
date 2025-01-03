@@ -8,7 +8,7 @@
     "build": "bun --bun build.ts"
   },
   "dependencies": {
-    "@vues3/flat-json-tree": "^0.3.6",
+    "@vues3/flat-json-tree": "^0.3.7",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "bun-plugin-dts": "^0.3.0",
@@ -25,7 +25,7 @@
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.7.0",
-    "eslint-plugin-perfectionist": "^4.4.0",
+    "eslint-plugin-perfectionist": "^4.5.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-tsdoc": "^0.4.0",
     "prettier": "^3.4.2",
