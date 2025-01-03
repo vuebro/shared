@@ -31,7 +31,7 @@ const properties: Readonly<Record<string, JSONSchema>> = {
 
 /* -------------------------------------------------------------------------- */
 
-const importmap: object = {
+const importmap = {
   $id,
   additionalProperties,
   properties,
