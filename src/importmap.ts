@@ -17,17 +17,17 @@ const additionalProperties: JSONSchema = false;
 
 /* -------------------------------------------------------------------------- */
 
-const type: JSONSchemaType = "object";
-
-/* -------------------------------------------------------------------------- */
-
 const properties: Readonly<Record<string, JSONSchema>> = {
   imports: {
     additionalProperties: { type: "string" },
     default: {},
-    type,
+    type: "object",
   },
 } as const;
+
+/* -------------------------------------------------------------------------- */
+
+const type: JSONSchemaType = "object";
 
 /* -------------------------------------------------------------------------- */
 
