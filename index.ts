@@ -1,3 +1,8 @@
+/* -------------------------------------------------------------------------- */
+/*                                   Imports                                  */
+/* -------------------------------------------------------------------------- */
+
+import type { AnyValidateFunction } from "ajv/dist/types";
 import type { FromSchema } from "json-schema-to-ts";
 import type { ComputedRef, Reactive } from "vue";
 
@@ -12,7 +17,19 @@ import Data from "./src/data";
 import Importmap from "./src/importmap";
 import Page from "./src/page";
 
-export type TPage = FromSchema<typeof Page> & {
+/* -------------------------------------------------------------------------- */
+/*                                    Types                                   */
+/* -------------------------------------------------------------------------- */
+
+type TCredentials = FromSchema<typeof Credentials>;
+
+/* -------------------------------------------------------------------------- */
+
+type TImportmap = FromSchema<typeof Importmap>;
+
+/* -------------------------------------------------------------------------- */
+
+type TPage = FromSchema<typeof Page> & {
   $children?: TPage[];
   $index: number;
   $next?: TPage;
@@ -31,9 +48,11 @@ export type TPage = FromSchema<typeof Page> & {
   title: string;
   to?: string;
 };
-dynamicDefaults.DEFAULTS.uuid = (): (() => string) => () => v4();
-export type TCredentials = FromSchema<typeof Credentials>;
-export type TImportmap = FromSchema<typeof Importmap>;
+
+/* -------------------------------------------------------------------------- */
+/*                                  Constants                                 */
+/* -------------------------------------------------------------------------- */
+
 const ajv = (() => {
   const esm = true;
   const code = { esm };
@@ -51,44 +70,69 @@ const ajv = (() => {
     useDefaults,
   });
 })();
-export const validateCredentials = ajv.getSchema("urn:jsonschema:credentials");
-const validateData = ajv.getSchema("urn:jsonschema:data");
-const validateImportmap = ajv.getSchema("urn:jsonschema:importmap");
-export const deep = true;
-export const importmap = reactive({} as TImportmap);
-export const data: Reactive<TPage[]> = reactive([]);
-export const customFetch = async (url: string) => (await fetch(url)).text();
-const flatJsonTree = useFlatJsonTree(data);
-export const { add, down, left, remove, right, up } = flatJsonTree;
-export const { leaves: pages } = flatJsonTree as unknown as {
-  leaves: ComputedRef<TPage[]>;
-};
-const $children = {
+
+/* -------------------------------------------------------------------------- */
+
+const validateCredentials: AnyValidateFunction | null =
+  ajv.getSchema("urn:jsonschema:credentials") ?? null;
+
+/* -------------------------------------------------------------------------- */
+
+const validateData: AnyValidateFunction | null =
+  ajv.getSchema("urn:jsonschema:data") ?? null;
+
+/* -------------------------------------------------------------------------- */
+
+const validateImportmap: AnyValidateFunction | null =
+  ajv.getSchema("urn:jsonschema:importmap") ?? null;
+
+/* -------------------------------------------------------------------------- */
+
+const deep = true;
+
+/* -------------------------------------------------------------------------- */
+
+const $children: PropertyDescriptor = {
   get(this: TPage) {
     return this.children.filter(({ enabled }) => enabled);
   },
 };
-const $siblings = {
+
+/* -------------------------------------------------------------------------- */
+
+const $siblings: PropertyDescriptor = {
   get(this: TPage) {
     return this.siblings.filter(({ enabled }) => enabled);
   },
 };
-const $index = {
+
+/* -------------------------------------------------------------------------- */
+
+const $index: PropertyDescriptor = {
   get(this: TPage) {
     return this.$siblings.findIndex(({ id }) => this.id === id);
   },
 };
-const $prev = {
+
+/* -------------------------------------------------------------------------- */
+
+const $prev: PropertyDescriptor = {
   get(this: TPage) {
     return this.$siblings[this.$index - 1];
   },
 };
-const $next = {
+
+/* -------------------------------------------------------------------------- */
+
+const $next: PropertyDescriptor = {
   get(this: TPage) {
     return this.$siblings[this.$index + 1];
   },
 };
-const path = {
+
+/* -------------------------------------------------------------------------- */
+
+const path: PropertyDescriptor = {
   get(this: TPage) {
     const branch = this.branch.slice(1);
     return branch.some(({ name }) => !name)
@@ -99,29 +143,95 @@ const path = {
           .replaceAll(" ", "_");
   },
 };
-const to = {
+
+/* -------------------------------------------------------------------------- */
+
+const to: PropertyDescriptor = {
   get(this: TPage) {
     return (this.loc?.replaceAll(" ", "_") ?? this.path)
       ?.replace(/^\/?/, "/")
       .replace(/\/?$/, "/");
   },
 };
-const i = {
+
+/* -------------------------------------------------------------------------- */
+
+const i: PropertyDescriptor = {
   get(this: TPage) {
     return this.icon && `i-${this.icon}`;
   },
 };
-const title = {
+
+/* -------------------------------------------------------------------------- */
+
+const title: PropertyDescriptor = {
   get(this: TPage) {
     return this.header ?? this.name;
   },
 };
+
+/* -------------------------------------------------------------------------- */
+/*                                 References                                 */
+/* -------------------------------------------------------------------------- */
+
+const importmap: Reactive<TImportmap> = reactive({});
+
+/* -------------------------------------------------------------------------- */
+
+const data: Reactive<TPage[]> = reactive([]);
+
+/* -------------------------------------------------------------------------- */
+/*                                 Composables                                */
+/* -------------------------------------------------------------------------- */
+
+const flatJsonTree = useFlatJsonTree(data);
+
+/* -------------------------------------------------------------------------- */
+/*                                 References                                 */
+/* -------------------------------------------------------------------------- */
+
+const { leaves: pages } = flatJsonTree as unknown as {
+  leaves: ComputedRef<TPage[]>;
+};
+
+/* -------------------------------------------------------------------------- */
+/*                                  Functions                                 */
+/* -------------------------------------------------------------------------- */
+
+const { add, down, left, remove, right, up } = flatJsonTree;
+
+/* -------------------------------------------------------------------------- */
+
+const customFetch: (url: string) => Promise<string> = async (url) =>
+  (await fetch(url)).text();
+
+/* -------------------------------------------------------------------------- */
+
+const getFonts: (fonts: string[]) => Record<string, string> = (fonts) =>
+  Object.fromEntries(
+    fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
+  );
+
+/* -------------------------------------------------------------------------- */
+/*                                    Main                                    */
+/* -------------------------------------------------------------------------- */
+
+dynamicDefaults.DEFAULTS.uuid = (): (() => string) => () => v4();
+
+/* -------------------------------------------------------------------------- */
+
 watch(pages, (value) => {
-  validateData?.(value) as boolean;
+  validateData?.(value);
 });
+
+/* -------------------------------------------------------------------------- */
+
 watch(importmap, (value) => {
-  validateImportmap?.(value) as boolean;
+  validateImportmap?.(value);
 });
+
+/* -------------------------------------------------------------------------- */
+
 watch(pages, (value) => {
   value.forEach((element) => {
     Object.defineProperties(element, {
@@ -137,7 +247,26 @@ watch(pages, (value) => {
     });
   });
 });
-export const getFonts = (fonts: string[]) =>
-  Object.fromEntries(
-    fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
-  );
+
+/* -------------------------------------------------------------------------- */
+/*                                   Exports                                  */
+/* -------------------------------------------------------------------------- */
+
+export type { TCredentials, TImportmap, TPage };
+export {
+  add,
+  customFetch,
+  data,
+  deep,
+  down,
+  getFonts,
+  importmap,
+  left,
+  pages,
+  remove,
+  right,
+  up,
+  validateCredentials,
+};
+
+/* -------------------------------------------------------------------------- */
