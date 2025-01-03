@@ -17,7 +17,7 @@ const additionalProperties: JSONSchema = false;
 
 /* -------------------------------------------------------------------------- */
 
-const properties: Readonly<Record<string, JSONSchema>> = {
+const properties = {
   imports: {
     additionalProperties: { type: "string" },
     default: {},
