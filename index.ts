@@ -205,7 +205,21 @@ const { leaves: pages } = flatJsonTree as unknown as {
 /*                                  Functions                                 */
 /* -------------------------------------------------------------------------- */
 
-const { add, down, left, remove, right, up } = flatJsonTree;
+const {
+  add,
+  down,
+  left,
+  remove,
+  right,
+  up,
+}: {
+  add: (pId: string) => null | string;
+  down: (pId: string) => void;
+  left: (pId: string) => null | string;
+  remove: (pId: string) => null | string;
+  right: (pId: string) => null | string;
+  up: (pId: string) => void;
+} = flatJsonTree;
 
 /* -------------------------------------------------------------------------- */
 
