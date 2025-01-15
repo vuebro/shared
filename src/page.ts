@@ -75,7 +75,10 @@ const properties = {
   images: {
     default: [],
     items: {
-      properties: { alt: { type: "string" }, url: { type: "string" } },
+      properties: {
+        alt: { default: null, nullable, type: "string" },
+        url: { default: "", type: "string" },
+      },
       type: "object",
     },
     type: "array",
