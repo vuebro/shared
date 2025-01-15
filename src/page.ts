@@ -76,7 +76,7 @@ const properties = {
     default: [],
     items: {
       properties: {
-        alt: { default: null, nullable, type: "string" },
+        alt: { type: "string" },
         url: { default: "", type: "string" },
       },
       type: "object",
