@@ -58,7 +58,23 @@ dynamicDefaults.DEFAULTS.uuid = (): (() => string) => () => v4();
 /*                                  Constants                                 */
 /* -------------------------------------------------------------------------- */
 
-const ajv = (() => {
+const deep = true;
+
+/* -------------------------------------------------------------------------- */
+/*                                  Reactives                                 */
+/* -------------------------------------------------------------------------- */
+
+const importmap: Reactive<TImportmap> = reactive({} as TImportmap);
+
+/* -------------------------------------------------------------------------- */
+
+const data: Reactive<TPage[]> = reactive([]);
+
+/* -------------------------------------------------------------------------- */
+/*                                   Objects                                  */
+/* -------------------------------------------------------------------------- */
+
+const ajv: Ajv = (() => {
   const esm = true;
   const code = { esm };
   const coerceTypes = true;
@@ -75,25 +91,6 @@ const ajv = (() => {
     useDefaults,
   });
 })();
-
-/* -------------------------------------------------------------------------- */
-
-const validateCredentials: AnyValidateFunction | null =
-  ajv.getSchema("urn:jsonschema:credentials") ?? null;
-
-/* -------------------------------------------------------------------------- */
-
-const validateData: AnyValidateFunction | null =
-  ajv.getSchema("urn:jsonschema:data") ?? null;
-
-/* -------------------------------------------------------------------------- */
-
-const validateImportmap: AnyValidateFunction | null =
-  ajv.getSchema("urn:jsonschema:importmap") ?? null;
-
-/* -------------------------------------------------------------------------- */
-
-const deep = true;
 
 /* -------------------------------------------------------------------------- */
 
@@ -178,23 +175,11 @@ const title: PropertyDescriptor = {
 };
 
 /* -------------------------------------------------------------------------- */
-/*                                 References                                 */
-/* -------------------------------------------------------------------------- */
-
-const importmap: Reactive<TImportmap> = reactive({} as TImportmap);
-
-/* -------------------------------------------------------------------------- */
-
-const data: Reactive<TPage[]> = reactive([]);
-
-/* -------------------------------------------------------------------------- */
-/*                                 Composables                                */
-/* -------------------------------------------------------------------------- */
 
 const flatJsonTree = useFlatJsonTree(data);
 
 /* -------------------------------------------------------------------------- */
-/*                                 References                                 */
+/*                                Computations                                */
 /* -------------------------------------------------------------------------- */
 
 const { leaves: pages } = flatJsonTree as unknown as {
@@ -203,6 +188,21 @@ const { leaves: pages } = flatJsonTree as unknown as {
 
 /* -------------------------------------------------------------------------- */
 /*                                  Functions                                 */
+/* -------------------------------------------------------------------------- */
+
+const validateCredentials: AnyValidateFunction | null =
+  ajv.getSchema("urn:jsonschema:credentials") ?? null;
+
+/* -------------------------------------------------------------------------- */
+
+const validateData: AnyValidateFunction | null =
+  ajv.getSchema("urn:jsonschema:data") ?? null;
+
+/* -------------------------------------------------------------------------- */
+
+const validateImportmap: AnyValidateFunction | null =
+  ajv.getSchema("urn:jsonschema:importmap") ?? null;
+
 /* -------------------------------------------------------------------------- */
 
 const {
@@ -223,33 +223,39 @@ const {
 
 /* -------------------------------------------------------------------------- */
 
-const customFetch: (url: string) => Promise<string> = async (url) =>
-  (await fetch(url)).text();
+async function callValidateData(value: TPage[]): Promise<void> {
+  await validateData?.(value);
+}
 
 /* -------------------------------------------------------------------------- */
 
-const getFonts: (fonts: string[]) => Record<string, string> = (fonts) =>
-  Object.fromEntries(
+async function callValidateImportmap(value: TImportmap) {
+  await validateImportmap?.(value);
+}
+
+/* -------------------------------------------------------------------------- */
+
+function consoleError(error: unknown) {
+  window.console.error(error);
+}
+
+/* -------------------------------------------------------------------------- */
+
+async function customFetch(url: string): Promise<string> {
+  return (await fetch(url)).text();
+}
+
+/* -------------------------------------------------------------------------- */
+
+function getFonts(fonts: string[]): Record<string, string> {
+  return Object.fromEntries(
     fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
   );
-
-/* -------------------------------------------------------------------------- */
-/*                                    Main                                    */
-/* -------------------------------------------------------------------------- */
-
-watch(pages, (value) => {
-  validateData?.(value);
-});
+}
 
 /* -------------------------------------------------------------------------- */
 
-watch(importmap, (value) => {
-  validateImportmap?.(value);
-});
-
-/* -------------------------------------------------------------------------- */
-
-watch(pages, (value) => {
+function pagesExtraProperties(value: TPage[]): void {
   value.forEach((element) => {
     Object.defineProperties(element, {
       $children,
@@ -263,7 +269,21 @@ watch(pages, (value) => {
       to,
     });
   });
-});
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                    Main                                    */
+/* -------------------------------------------------------------------------- */
+
+watch(pages, callValidateData);
+
+/* -------------------------------------------------------------------------- */
+
+watch(importmap, callValidateImportmap);
+
+/* -------------------------------------------------------------------------- */
+
+watch(pages, pagesExtraProperties);
 
 /* -------------------------------------------------------------------------- */
 /*                                   Exports                                  */
@@ -272,6 +292,7 @@ watch(pages, (value) => {
 export type { TCredentials, TImportmap, TPage };
 export {
   add,
+  consoleError,
   customFetch,
   data,
   deep,
