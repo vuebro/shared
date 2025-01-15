@@ -20,6 +20,8 @@ const nullable = true;
 const type: JSONSchemaType = "object";
 
 /* -------------------------------------------------------------------------- */
+/*                                   Objects                                  */
+/* -------------------------------------------------------------------------- */
 
 const additionalProperties = {
   properties: {
