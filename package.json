@@ -8,7 +8,7 @@
     "build": "bun --bun build.ts"
   },
   "dependencies": {
-    "@vues3/flat-json-tree": "^0.3.20",
+    "@vues3/flat-json-tree": "file:../flat-json-tree",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "bun-plugin-dts": "^0.3.0",
@@ -17,7 +17,7 @@
     "vue": "^3.5.13"
   },
   "devDependencies": {
-    "@types/bun": "^1.1.16",
+    "@types/bun": "^1.1.17",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "eslint": "^8.57.1",
