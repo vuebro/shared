@@ -94,13 +94,13 @@ const ajv: Ajv = (() => {
 
 /* -------------------------------------------------------------------------- */
 
-const ifEnabled = ({ enabled }: TPage): boolean => enabled;
+const isEnabled = ({ enabled }: TPage): boolean => enabled;
 
 /* -------------------------------------------------------------------------- */
 
 const $children: PropertyDescriptor = {
   get(this: TPage) {
-    return this.children.filter(ifEnabled);
+    return this.children.filter(isEnabled);
   },
 };
 
@@ -108,7 +108,7 @@ const $children: PropertyDescriptor = {
 
 const $siblings: PropertyDescriptor = {
   get(this: TPage) {
-    return this.siblings.filter(ifEnabled);
+    return this.siblings.filter(isEnabled);
   },
 };
 
@@ -138,7 +138,7 @@ const $next: PropertyDescriptor = {
 
 /* -------------------------------------------------------------------------- */
 
-const ifNotName = ({ name }: TPage): boolean => !name;
+const isNotName = ({ name }: TPage): boolean => !name;
 
 /* -------------------------------------------------------------------------- */
 
@@ -149,7 +149,7 @@ const getName = ({ name }: TPage): null | string => name;
 const path: PropertyDescriptor = {
   get(this: TPage) {
     const branch = this.branch.slice(1);
-    return branch.some(ifNotName)
+    return branch.some(isNotName)
       ? null
       : branch.map(getName).join("/").replaceAll(" ", "_");
   },
