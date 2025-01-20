@@ -52,7 +52,7 @@ type TPage = FromSchema<typeof Page> & {
 /*                                    Init                                    */
 /* -------------------------------------------------------------------------- */
 
-dynamicDefaults.DEFAULTS.uuid = (): (() => string) => () => v4();
+dynamicDefaults.DEFAULTS.uuid = () => () => v4();
 
 /* -------------------------------------------------------------------------- */
 /*                                  Constants                                 */
@@ -94,9 +94,13 @@ const ajv: Ajv = (() => {
 
 /* -------------------------------------------------------------------------- */
 
+const ifEnabled = ({ enabled }: TPage): boolean => enabled;
+
+/* -------------------------------------------------------------------------- */
+
 const $children: PropertyDescriptor = {
   get(this: TPage) {
-    return this.children.filter(({ enabled }) => enabled);
+    return this.children.filter(ifEnabled);
   },
 };
 
@@ -104,7 +108,7 @@ const $children: PropertyDescriptor = {
 
 const $siblings: PropertyDescriptor = {
   get(this: TPage) {
-    return this.siblings.filter(({ enabled }) => enabled);
+    return this.siblings.filter(ifEnabled);
   },
 };
 
@@ -134,15 +138,20 @@ const $next: PropertyDescriptor = {
 
 /* -------------------------------------------------------------------------- */
 
+const ifNotName = ({ name }: TPage): boolean => !name;
+
+/* -------------------------------------------------------------------------- */
+
+const getName = ({ name }: TPage): null | string => name;
+
+/* -------------------------------------------------------------------------- */
+
 const path: PropertyDescriptor = {
   get(this: TPage) {
     const branch = this.branch.slice(1);
-    return branch.some(({ name }) => !name)
+    return branch.some(ifNotName)
       ? null
-      : branch
-          .map(({ name }) => name)
-          .join("/")
-          .replaceAll(" ", "_");
+      : branch.map(getName).join("/").replaceAll(" ", "_");
   },
 };
 
@@ -246,27 +255,36 @@ const customFetch = async (url: string): Promise<string> =>
 
 /* -------------------------------------------------------------------------- */
 
+const getFontEntry = (value: string): [string, string] => [
+  value.toLowerCase().replaceAll(" ", "_"),
+  value,
+];
+
+/* -------------------------------------------------------------------------- */
+
 const getFonts = (fonts: string[]): Record<string, string> =>
-  Object.fromEntries(
-    fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
-  );
+  Object.fromEntries(fonts.map(getFontEntry));
+
+/* -------------------------------------------------------------------------- */
+
+const defineProperties = (element: TPage): void => {
+  Object.defineProperties(element, {
+    $children,
+    $index,
+    $next,
+    $prev,
+    $siblings,
+    i,
+    path,
+    title,
+    to,
+  });
+};
 
 /* -------------------------------------------------------------------------- */
 
 const pagesExtraProperties = (value: TPage[]): void => {
-  value.forEach((element) => {
-    Object.defineProperties(element, {
-      $children,
-      $index,
-      $next,
-      $prev,
-      $siblings,
-      i,
-      path,
-      title,
-      to,
-    });
-  });
+  value.forEach(defineProperties);
 };
 
 /* -------------------------------------------------------------------------- */
