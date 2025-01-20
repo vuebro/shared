@@ -223,39 +223,37 @@ const {
 
 /* -------------------------------------------------------------------------- */
 
-async function callValidateData(value: TPage[]): Promise<void> {
-  await validateData?.(value);
-}
+const callValidateData = (value: TPage[]): void => {
+  validateData?.(value);
+};
 
 /* -------------------------------------------------------------------------- */
 
-async function callValidateImportmap(value: TImportmap) {
-  await validateImportmap?.(value);
-}
+const callValidateImportmap = (value: TImportmap): void => {
+  validateImportmap?.(value);
+};
 
 /* -------------------------------------------------------------------------- */
 
-function consoleError(error: unknown) {
+const consoleError = (error: unknown): void => {
   window.console.error(error);
-}
+};
 
 /* -------------------------------------------------------------------------- */
 
-async function customFetch(url: string): Promise<string> {
-  return (await fetch(url)).text();
-}
+const customFetch = async (url: string): Promise<string> =>
+  (await fetch(url)).text();
 
 /* -------------------------------------------------------------------------- */
 
-function getFonts(fonts: string[]): Record<string, string> {
-  return Object.fromEntries(
+const getFonts = (fonts: string[]): Record<string, string> =>
+  Object.fromEntries(
     fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
   );
-}
 
 /* -------------------------------------------------------------------------- */
 
-function pagesExtraProperties(value: TPage[]): void {
+const pagesExtraProperties = (value: TPage[]): void => {
   value.forEach((element) => {
     Object.defineProperties(element, {
       $children,
@@ -269,7 +267,7 @@ function pagesExtraProperties(value: TPage[]): void {
       to,
     });
   });
-}
+};
 
 /* -------------------------------------------------------------------------- */
 /*                                    Main                                    */
