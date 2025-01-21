@@ -2,7 +2,11 @@
 /*                                   Imports                                  */
 /* -------------------------------------------------------------------------- */
 
-import type { AnyValidateFunction } from "ajv/dist/types";
+import type {
+  AnySchema,
+  AnyValidateFunction,
+  FuncKeywordDefinition,
+} from "ajv/dist/types";
 import type { FromSchema } from "json-schema-to-ts";
 import type { ComputedRef, Reactive } from "vue";
 
@@ -16,6 +20,20 @@ import Credentials from "./src/credentials";
 import Data from "./src/data";
 import Importmap from "./src/importmap";
 import Page from "./src/page";
+
+/* -------------------------------------------------------------------------- */
+/*                                 Interfaces                                 */
+/* -------------------------------------------------------------------------- */
+
+interface IFlatJsonTree {
+  add: (pId: string) => string | undefined;
+  down: (pId: string) => void;
+  leaves: ComputedRef<TPage[]>;
+  left: (pId: string) => string | undefined;
+  remove: (pId: string) => string | undefined;
+  right: (pId: string) => string | undefined;
+  up: (pId: string) => void;
+}
 
 /* -------------------------------------------------------------------------- */
 /*                                    Types                                   */
@@ -61,6 +79,22 @@ dynamicDefaults.DEFAULTS.uuid = () => () => v4();
 const deep = true;
 
 /* -------------------------------------------------------------------------- */
+
+const esm = true;
+
+/* -------------------------------------------------------------------------- */
+
+const coerceTypes = true;
+
+/* -------------------------------------------------------------------------- */
+
+const removeAdditional = true;
+
+/* -------------------------------------------------------------------------- */
+
+const useDefaults = true;
+
+/* -------------------------------------------------------------------------- */
 /*                                  Reactives                                 */
 /* -------------------------------------------------------------------------- */
 
@@ -71,36 +105,37 @@ const importmap: Reactive<TImportmap> = reactive({} as TImportmap);
 const data: Reactive<TPage[]> = reactive([]);
 
 /* -------------------------------------------------------------------------- */
+/*                                   Arrays                                   */
+/* -------------------------------------------------------------------------- */
+
+const keywords: FuncKeywordDefinition[] = [dynamicDefaults()];
+
+/* -------------------------------------------------------------------------- */
+
+const schemas: AnySchema[] = [Credentials, Data, Page, Importmap];
+
+/* -------------------------------------------------------------------------- */
 /*                                   Objects                                  */
 /* -------------------------------------------------------------------------- */
 
-const ajv: Ajv = (() => {
-  const esm = true;
-  const code = { esm };
-  const coerceTypes = true;
-  const keywords = [dynamicDefaults()];
-  const removeAdditional = true;
-  const schemas = [Credentials, Data, Page, Importmap];
-  const useDefaults = true;
-  return new Ajv({
-    code,
-    coerceTypes,
-    keywords,
-    removeAdditional,
-    schemas,
-    useDefaults,
-  });
-})();
+const code = { esm };
 
 /* -------------------------------------------------------------------------- */
 
-const isEnabled = ({ enabled }: TPage): boolean => enabled;
+const ajv: Ajv = new Ajv({
+  code,
+  coerceTypes,
+  keywords,
+  removeAdditional,
+  schemas,
+  useDefaults,
+});
 
 /* -------------------------------------------------------------------------- */
 
 const $children: PropertyDescriptor = {
   get(this: TPage) {
-    return this.children.filter(isEnabled);
+    return this.children.filter(({ enabled }) => enabled);
   },
 };
 
@@ -108,7 +143,7 @@ const $children: PropertyDescriptor = {
 
 const $siblings: PropertyDescriptor = {
   get(this: TPage) {
-    return this.siblings.filter(isEnabled);
+    return this.siblings.filter(({ enabled }) => enabled);
   },
 };
 
@@ -178,15 +213,15 @@ const title: PropertyDescriptor = {
 
 /* -------------------------------------------------------------------------- */
 
-const flatJsonTree = useFlatJsonTree(data);
-
-/* -------------------------------------------------------------------------- */
-/*                                Computations                                */
-/* -------------------------------------------------------------------------- */
-
-const { leaves: pages } = flatJsonTree as unknown as {
-  leaves: ComputedRef<TPage[]>;
-};
+const {
+  add,
+  down,
+  leaves: pages,
+  left,
+  remove,
+  right,
+  up,
+}: IFlatJsonTree = useFlatJsonTree(data) as unknown as IFlatJsonTree;
 
 /* -------------------------------------------------------------------------- */
 /*                                  Functions                                 */
@@ -210,39 +245,21 @@ const validateImportmap: AnyValidateFunction | undefined = ajv.getSchema(
 
 /* -------------------------------------------------------------------------- */
 
-const {
-  add,
-  down,
-  left,
-  remove,
-  right,
-  up,
-}: {
-  add: (pId: string) => string | undefined;
-  down: (pId: string) => void;
-  left: (pId: string) => string | undefined;
-  remove: (pId: string) => string | undefined;
-  right: (pId: string) => string | undefined;
-  up: (pId: string) => void;
-} = flatJsonTree;
-
-/* -------------------------------------------------------------------------- */
-
-const callValidateData = async (value: TPage[]): Promise<void> => {
+async function callValidateData(value: TPage[]): Promise<void> {
   await validateData?.(value);
-};
+}
 
 /* -------------------------------------------------------------------------- */
 
-const callValidateImportmap = async (value: TImportmap): Promise<void> => {
+async function callValidateImportmap(value: TImportmap): Promise<void> {
   await validateImportmap?.(value);
-};
+}
 
 /* -------------------------------------------------------------------------- */
 
-const consoleError = (error: unknown): void => {
+function consoleError(error: unknown): void {
   window.console.error(error);
-};
+}
 
 /* -------------------------------------------------------------------------- */
 
@@ -251,19 +268,14 @@ const customFetch = async (url: string): Promise<string> =>
 
 /* -------------------------------------------------------------------------- */
 
-const getFontEntry = (value: string): [string, string] => [
-  value.toLowerCase().replaceAll(" ", "_"),
-  value,
-];
-
-/* -------------------------------------------------------------------------- */
-
 const getFonts = (fonts: string[]): Record<string, string> =>
-  Object.fromEntries(fonts.map(getFontEntry));
+  Object.fromEntries(
+    fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
+  );
 
 /* -------------------------------------------------------------------------- */
 
-const defineProperties = (element: TPage): void => {
+function defineProperties(element: TPage): void {
   Object.defineProperties(element, {
     $children,
     $index,
@@ -275,13 +287,13 @@ const defineProperties = (element: TPage): void => {
     title,
     to,
   });
-};
+}
 
 /* -------------------------------------------------------------------------- */
 
-const pagesExtraProperties = (value: TPage[]): void => {
+function pagesExtraProperties(value: TPage[]): void {
   value.forEach(defineProperties);
-};
+}
 
 /* -------------------------------------------------------------------------- */
 /*                                    Main                                    */
