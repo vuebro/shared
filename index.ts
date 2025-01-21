@@ -32,20 +32,20 @@ type TImportmap = FromSchema<typeof Importmap>;
 type TPage = FromSchema<typeof Page> & {
   $children: TPage[];
   $index: number;
-  $next: null | TPage;
-  $prev: null | TPage;
+  $next?: TPage;
+  $prev?: TPage;
   $siblings: TPage[];
   branch: TPage[];
   children: TPage[];
-  i: null | string;
+  i?: string;
   index: number;
-  next: null | TPage;
-  parent: null | TPage;
-  path: null | string;
-  prev: null | TPage;
+  next?: TPage;
+  parent?: TPage;
+  path?: string;
+  prev?: TPage;
   siblings: TPage[];
-  title: null | string;
-  to: null | string;
+  title?: string;
+  to?: string;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -124,7 +124,7 @@ const $index: PropertyDescriptor = {
 
 const $prev: PropertyDescriptor = {
   get(this: TPage) {
-    return this.$siblings[this.$index - 1] ?? null;
+    return this.$siblings[this.$index - 1];
   },
 };
 
@@ -132,26 +132,21 @@ const $prev: PropertyDescriptor = {
 
 const $next: PropertyDescriptor = {
   get(this: TPage) {
-    return this.$siblings[this.$index + 1] ?? null;
+    return this.$siblings[this.$index + 1];
   },
 };
-
-/* -------------------------------------------------------------------------- */
-
-const isNotName = ({ name }: TPage): boolean => !name;
-
-/* -------------------------------------------------------------------------- */
-
-const getName = ({ name }: TPage): null | string => name;
 
 /* -------------------------------------------------------------------------- */
 
 const path: PropertyDescriptor = {
   get(this: TPage) {
     const branch = this.branch.slice(1);
-    return branch.some(isNotName)
-      ? null
-      : branch.map(getName).join("/").replaceAll(" ", "_");
+    return branch.some(({ name }) => !name)
+      ? undefined
+      : branch
+          .map(({ name }) => name)
+          .join("/")
+          .replaceAll(" ", "_");
   },
 };
 
@@ -159,11 +154,9 @@ const path: PropertyDescriptor = {
 
 const to: PropertyDescriptor = {
   get(this: TPage) {
-    return (
-      (this.loc?.replaceAll(" ", "_") ?? this.path)
-        ?.replace(/^\/?/, "/")
-        .replace(/\/?$/, "/") ?? null
-    );
+    return (this.loc?.replaceAll(" ", "_") ?? this.path)
+      ?.replace(/^\/?/, "/")
+      .replace(/\/?$/, "/");
   },
 };
 
@@ -199,18 +192,21 @@ const { leaves: pages } = flatJsonTree as unknown as {
 /*                                  Functions                                 */
 /* -------------------------------------------------------------------------- */
 
-const validateCredentials: AnyValidateFunction | null =
-  ajv.getSchema("urn:jsonschema:credentials") ?? null;
+const validateCredentials: AnyValidateFunction | undefined = ajv.getSchema(
+  "urn:jsonschema:credentials",
+);
 
 /* -------------------------------------------------------------------------- */
 
-const validateData: AnyValidateFunction | null =
-  ajv.getSchema("urn:jsonschema:data") ?? null;
+const validateData: AnyValidateFunction | undefined = ajv.getSchema(
+  "urn:jsonschema:data",
+);
 
 /* -------------------------------------------------------------------------- */
 
-const validateImportmap: AnyValidateFunction | null =
-  ajv.getSchema("urn:jsonschema:importmap") ?? null;
+const validateImportmap: AnyValidateFunction | undefined = ajv.getSchema(
+  "urn:jsonschema:importmap",
+);
 
 /* -------------------------------------------------------------------------- */
 
@@ -222,24 +218,24 @@ const {
   right,
   up,
 }: {
-  add: (pId: string) => null | string;
+  add: (pId: string) => string | undefined;
   down: (pId: string) => void;
-  left: (pId: string) => null | string;
-  remove: (pId: string) => null | string;
-  right: (pId: string) => null | string;
+  left: (pId: string) => string | undefined;
+  remove: (pId: string) => string | undefined;
+  right: (pId: string) => string | undefined;
   up: (pId: string) => void;
 } = flatJsonTree;
 
 /* -------------------------------------------------------------------------- */
 
-const callValidateData = (value: TPage[]): void => {
-  validateData?.(value);
+const callValidateData = async (value: TPage[]): Promise<void> => {
+  await validateData?.(value);
 };
 
 /* -------------------------------------------------------------------------- */
 
-const callValidateImportmap = (value: TImportmap): void => {
-  validateImportmap?.(value);
+const callValidateImportmap = async (value: TImportmap): Promise<void> => {
+  await validateImportmap?.(value);
 };
 
 /* -------------------------------------------------------------------------- */
