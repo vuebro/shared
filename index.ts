@@ -245,21 +245,21 @@ const validateImportmap: AnyValidateFunction | undefined = ajv.getSchema(
 
 /* -------------------------------------------------------------------------- */
 
-async function callValidateData(value: TPage[]): Promise<void> {
+const callValidateData = async (value: TPage[]): Promise<void> => {
   await validateData?.(value);
-}
+};
 
 /* -------------------------------------------------------------------------- */
 
-async function callValidateImportmap(value: TImportmap): Promise<void> {
+const callValidateImportmap = async (value: TImportmap): Promise<void> => {
   await validateImportmap?.(value);
-}
+};
 
 /* -------------------------------------------------------------------------- */
 
-function consoleError(error: unknown): void {
+const consoleError = (error: unknown): void => {
   window.console.error(error);
-}
+};
 
 /* -------------------------------------------------------------------------- */
 
@@ -275,7 +275,7 @@ const getFonts = (fonts: string[]): Record<string, string> =>
 
 /* -------------------------------------------------------------------------- */
 
-function defineProperties(element: TPage): void {
+const defineProperties = (element: TPage): void => {
   Object.defineProperties(element, {
     $children,
     $index,
@@ -287,13 +287,13 @@ function defineProperties(element: TPage): void {
     title,
     to,
   });
-}
+};
 
 /* -------------------------------------------------------------------------- */
 
-function pagesExtraProperties(value: TPage[]): void {
+const pagesExtraProperties = (value: TPage[]): void => {
   value.forEach(defineProperties);
-}
+};
 
 /* -------------------------------------------------------------------------- */
 /*                                    Main                                    */
