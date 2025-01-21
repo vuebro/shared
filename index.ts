@@ -245,18 +245,6 @@ const validateImportmap: AnyValidateFunction | undefined = ajv.getSchema(
 
 /* -------------------------------------------------------------------------- */
 
-const callValidateData = async (value: TPage[]): Promise<void> => {
-  await validateData?.(value);
-};
-
-/* -------------------------------------------------------------------------- */
-
-const callValidateImportmap = async (value: TImportmap): Promise<void> => {
-  await validateImportmap?.(value);
-};
-
-/* -------------------------------------------------------------------------- */
-
 const consoleError = (error: unknown): void => {
   window.console.error(error);
 };
@@ -274,40 +262,36 @@ const getFonts = (fonts: string[]): Record<string, string> =>
   );
 
 /* -------------------------------------------------------------------------- */
+/*                                   Watches                                  */
+/* -------------------------------------------------------------------------- */
 
-const defineProperties = (element: TPage): void => {
-  Object.defineProperties(element, {
-    $children,
-    $index,
-    $next,
-    $prev,
-    $siblings,
-    i,
-    path,
-    title,
-    to,
+watch(pages, async (value) => {
+  await validateData?.(value);
+});
+
+/* -------------------------------------------------------------------------- */
+
+watch(importmap, async (value) => {
+  await validateImportmap?.(value);
+});
+
+/* -------------------------------------------------------------------------- */
+
+watch(pages, (value) => {
+  value.forEach((element) => {
+    Object.defineProperties(element, {
+      $children,
+      $index,
+      $next,
+      $prev,
+      $siblings,
+      i,
+      path,
+      title,
+      to,
+    });
   });
-};
-
-/* -------------------------------------------------------------------------- */
-
-const pagesExtraProperties = (value: TPage[]): void => {
-  value.forEach(defineProperties);
-};
-
-/* -------------------------------------------------------------------------- */
-/*                                    Main                                    */
-/* -------------------------------------------------------------------------- */
-
-watch(pages, callValidateData);
-
-/* -------------------------------------------------------------------------- */
-
-watch(importmap, callValidateImportmap);
-
-/* -------------------------------------------------------------------------- */
-
-watch(pages, pagesExtraProperties);
+});
 
 /* -------------------------------------------------------------------------- */
 /*                                   Exports                                  */
