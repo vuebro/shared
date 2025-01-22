@@ -2,11 +2,8 @@
 /*                                   Imports                                  */
 /* -------------------------------------------------------------------------- */
 
-import type {
-  AnySchema,
-  AnyValidateFunction,
-  FuncKeywordDefinition,
-} from "ajv/dist/types";
+import type { CodeOptions, CurrentOptions } from "ajv/dist/core";
+import type { AnyValidateFunction } from "ajv/dist/types";
 import type { FromSchema } from "json-schema-to-ts";
 import type { ComputedRef, Reactive } from "vue";
 
@@ -80,19 +77,19 @@ const deep = true;
 
 /* -------------------------------------------------------------------------- */
 
-const esm = true;
+const esm: CodeOptions["esm"] = true;
 
 /* -------------------------------------------------------------------------- */
 
-const coerceTypes = true;
+const coerceTypes: CurrentOptions["coerceTypes"] = true;
 
 /* -------------------------------------------------------------------------- */
 
-const removeAdditional = true;
+const removeAdditional: CurrentOptions["removeAdditional"] = true;
 
 /* -------------------------------------------------------------------------- */
 
-const useDefaults = true;
+const useDefaults: CurrentOptions["useDefaults"] = true;
 
 /* -------------------------------------------------------------------------- */
 /*                                  Reactives                                 */
@@ -108,17 +105,17 @@ const data: Reactive<TPage[]> = reactive([]);
 /*                                   Arrays                                   */
 /* -------------------------------------------------------------------------- */
 
-const keywords: FuncKeywordDefinition[] = [dynamicDefaults()];
+const keywords: CurrentOptions["keywords"] = [dynamicDefaults()];
 
 /* -------------------------------------------------------------------------- */
 
-const schemas: AnySchema[] = [Credentials, Data, Page, Importmap];
+const schemas: CurrentOptions["schemas"] = [Credentials, Data, Page, Importmap];
 
 /* -------------------------------------------------------------------------- */
 /*                                   Objects                                  */
 /* -------------------------------------------------------------------------- */
 
-const code = { esm };
+const code: CurrentOptions["code"] = { esm };
 
 /* -------------------------------------------------------------------------- */
 
