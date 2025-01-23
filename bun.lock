@@ -327,7 +327,7 @@
 
     "@vue/shared": ["@vue/shared@3.5.13", "", {}, "sha512-/hnE/qP5ZoGpol0a5mDi45bOd7t3tjYJBjsgCsivow7D48cJeV5l05RD82lPqi7gRiphZM37rnhW1l6ZoCNNnQ=="],
 
-    "@vues3/flat-json-tree": ["@vues3/flat-json-tree@0.3.29", "", { "dependencies": { "bun-plugin-dts": "^0.3.0", "uuid": "^11.0.5", "vue": "^3.5.13" } }, "sha512-DShE9ytTzPTolhkf6wHgzQXCxO/4pK9hnapHO6sg90nSZ6KBhGMiP8e4iSLiMHgE/3Sf1x1kumisuO8HSy8Peg=="],
+    "@vues3/flat-json-tree": ["@vues3/flat-json-tree@0.3.30", "", { "dependencies": { "bun-plugin-dts": "^0.3.0", "uuid": "^11.0.5", "vue": "^3.5.13" } }, "sha512-DZb7mOxmHRgJPITyQ09B38UK1H/IpuaEuBEKWR1P7yuqh+8OFC7P+/kE7RcWFzeSrKHZHyTle+kdX7B7uIMbWA=="],
 
     "acorn": ["acorn@8.14.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA=="],
 
