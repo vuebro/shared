@@ -69,8 +69,8 @@ const properties = {
   },
   description: { default: null, nullable, type: "string" },
   enabled: { default: true, type: "boolean" },
-  header: { default: null, nullable, type: "string" },
-  icon: { default: null, nullable, type: "string" },
+  header: { type: "string" },
+  icon: { type: "string" },
   id: { type: "string" },
   images: {
     default: [],
