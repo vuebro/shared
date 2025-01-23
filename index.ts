@@ -99,7 +99,7 @@ const importmap: Reactive<TImportmap> = reactive({} as TImportmap);
 
 /* -------------------------------------------------------------------------- */
 
-const data: Reactive<TPage[]> = reactive([]);
+const nodes: Reactive<TPage[]> = reactive([]);
 
 /* -------------------------------------------------------------------------- */
 /*                                   Arrays                                   */
@@ -218,7 +218,7 @@ const {
   remove,
   right,
   up,
-}: IFlatJsonTree = useFlatJsonTree(data) as unknown as IFlatJsonTree;
+}: IFlatJsonTree = useFlatJsonTree(nodes) as unknown as IFlatJsonTree;
 
 /* -------------------------------------------------------------------------- */
 /*                                  Functions                                 */
@@ -302,12 +302,12 @@ export {
   add,
   consoleError,
   customFetch,
-  data,
   deep,
   down,
   getFonts,
   importmap,
   left,
+  nodes,
   pages,
   remove,
   right,
