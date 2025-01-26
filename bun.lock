@@ -144,7 +144,7 @@
 
     "@vue/shared": ["@vue/shared@3.5.13", "", {}, "sha512-/hnE/qP5ZoGpol0a5mDi45bOd7t3tjYJBjsgCsivow7D48cJeV5l05RD82lPqi7gRiphZM37rnhW1l6ZoCNNnQ=="],
 
-    "@vues3/flat-json-tree": ["@vues3/flat-json-tree@0.3.31", "", { "dependencies": { "uuid": "^11.0.5", "vue": "^3.5.13" } }, "sha512-Zxifbh+W6YqwSy5rfzdjRNRAdMj2ZmVEc5FVX+wtFnDdjIGEqry6KCrgBbff5gEvTfAjC2bD7nisHkletBgxDQ=="],
+    "@vues3/flat-json-tree": ["@vues3/flat-json-tree@0.3.32", "", { "dependencies": { "uuid": "^11.0.5", "vue": "^3.5.13" } }, "sha512-mII30ajctG/z4SPCw/ZmTCdfyGzdeus7joq30NlwmY/58BWM0oauUus4uwJMEG0sQYslPgcF10WxMryUyRjBCA=="],
 
     "acorn": ["acorn@8.14.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA=="],
 
