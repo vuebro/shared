@@ -1,14 +1,8 @@
-/* -------------------------------------------------------------------------- */
-/*                                   Imports                                  */
-/* -------------------------------------------------------------------------- */
-
-import type { CodeOptions, CurrentOptions } from "ajv/dist/core";
-import type { AnyValidateFunction } from "ajv/dist/types";
 import type { FromSchema } from "json-schema-to-ts";
-import type { ComputedRef, Reactive } from "vue";
+import type { ComputedRef } from "vue";
 
 import useFlatJsonTree from "@vues3/flat-json-tree";
-import Ajv from "ajv";
+import AJV from "ajv";
 import dynamicDefaults from "ajv-keywords/dist/definitions/dynamicDefaults";
 import { v4 } from "uuid";
 import { reactive, watch } from "vue";
@@ -18,8 +12,6 @@ import Data from "./src/data";
 import Importmap from "./src/importmap";
 import Page from "./src/page";
 
-/* -------------------------------------------------------------------------- */
-/*                                 Interfaces                                 */
 /* -------------------------------------------------------------------------- */
 
 interface IFlatJsonTree {
@@ -33,16 +25,10 @@ interface IFlatJsonTree {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                    Types                                   */
-/* -------------------------------------------------------------------------- */
 
 type TCredentials = FromSchema<typeof Credentials>;
 
-/* -------------------------------------------------------------------------- */
-
 type TImportmap = FromSchema<typeof Importmap>;
-
-/* -------------------------------------------------------------------------- */
 
 type TPage = FromSchema<typeof Page> & {
   $children: TPage[];
@@ -64,215 +50,116 @@ type TPage = FromSchema<typeof Page> & {
 };
 
 /* -------------------------------------------------------------------------- */
-/*                                    Init                                    */
-/* -------------------------------------------------------------------------- */
 
 dynamicDefaults.DEFAULTS.uuid = () => () => v4();
 
 /* -------------------------------------------------------------------------- */
-/*                                  Constants                                 */
-/* -------------------------------------------------------------------------- */
 
-const deep = true;
-
-/* -------------------------------------------------------------------------- */
-
-const esm: CodeOptions["esm"] = true;
-
-/* -------------------------------------------------------------------------- */
-
-const coerceTypes: CurrentOptions["coerceTypes"] = true;
-
-/* -------------------------------------------------------------------------- */
-
-const removeAdditional: CurrentOptions["removeAdditional"] = true;
-
-/* -------------------------------------------------------------------------- */
-
-const useDefaults: CurrentOptions["useDefaults"] = true;
-
-/* -------------------------------------------------------------------------- */
-/*                                  Reactives                                 */
-/* -------------------------------------------------------------------------- */
-
-const importmap: Reactive<TImportmap> = reactive({} as TImportmap);
-
-/* -------------------------------------------------------------------------- */
-
-const nodes: Reactive<TPage[]> = reactive([]);
-
-/* -------------------------------------------------------------------------- */
-/*                                   Arrays                                   */
-/* -------------------------------------------------------------------------- */
-
-const keywords: CurrentOptions["keywords"] = [dynamicDefaults()];
-
-/* -------------------------------------------------------------------------- */
-
-const schemas: CurrentOptions["schemas"] = [Credentials, Data, Page, Importmap];
-
-/* -------------------------------------------------------------------------- */
-/*                                   Objects                                  */
-/* -------------------------------------------------------------------------- */
-
-const code: CurrentOptions["code"] = { esm };
-
-/* -------------------------------------------------------------------------- */
-
-const ajv: Ajv = new Ajv({
-  code,
-  coerceTypes,
-  keywords,
-  removeAdditional,
-  schemas,
-  useDefaults,
-});
-
-/* -------------------------------------------------------------------------- */
-
-const $children: PropertyDescriptor = {
-  get(this: TPage) {
-    return this.children.filter(({ enabled }) => enabled);
+const $children = {
+    get(this: TPage) {
+      return this.children.filter(({ enabled }) => enabled);
+    },
   },
-};
-
-/* -------------------------------------------------------------------------- */
-
-const $siblings: PropertyDescriptor = {
-  get(this: TPage) {
-    return this.siblings.filter(({ enabled }) => enabled);
+  $index = {
+    get(this: TPage) {
+      return this.$siblings.findIndex(({ id }) => this.id === id);
+    },
   },
-};
-
-/* -------------------------------------------------------------------------- */
-
-const $index: PropertyDescriptor = {
-  get(this: TPage) {
-    return this.$siblings.findIndex(({ id }) => this.id === id);
+  $next = {
+    get(this: TPage) {
+      return this.$siblings[this.$index + 1];
+    },
   },
-};
-
-/* -------------------------------------------------------------------------- */
-
-const $prev: PropertyDescriptor = {
-  get(this: TPage) {
-    return this.$siblings[this.$index - 1];
+  $prev = {
+    get(this: TPage) {
+      return this.$siblings[this.$index - 1];
+    },
   },
-};
-
-/* -------------------------------------------------------------------------- */
-
-const $next: PropertyDescriptor = {
-  get(this: TPage) {
-    return this.$siblings[this.$index + 1];
+  $siblings = {
+    get(this: TPage) {
+      return this.siblings.filter(({ enabled }) => enabled);
+    },
   },
-};
-
-/* -------------------------------------------------------------------------- */
-
-const path: PropertyDescriptor = {
-  get(this: TPage) {
-    const branch = this.branch.slice(1);
-    return branch.some(({ name }) => !name)
-      ? undefined
-      : branch
-          .map(({ name }) => name)
-          .join("/")
-          .replaceAll(" ", "_");
+  i = {
+    get(this: TPage) {
+      return this.icon && `i-${this.icon}`;
+    },
   },
-};
-
-/* -------------------------------------------------------------------------- */
-
-const to: PropertyDescriptor = {
-  get(this: TPage) {
-    return (this.loc?.replaceAll(" ", "_") ?? this.path)
-      ?.replace(/^\/?/, "/")
-      .replace(/\/?$/, "/");
+  path = {
+    get(this: TPage) {
+      const branch = this.branch.slice(1);
+      return branch.some(({ name }) => !name)
+        ? undefined
+        : branch
+            .map(({ name }) => name)
+            .join("/")
+            .replaceAll(" ", "_");
+    },
   },
-};
-
-/* -------------------------------------------------------------------------- */
-
-const i: PropertyDescriptor = {
-  get(this: TPage) {
-    return this.icon && `i-${this.icon}`;
+  title = {
+    get(this: TPage) {
+      return this.header ?? this.name;
+    },
   },
-};
+  to = {
+    get(this: TPage) {
+      return (this.loc?.replaceAll(" ", "_") ?? this.path)
+        ?.replace(/^\/?/, "/")
+        .replace(/\/?$/, "/");
+    },
+  };
 
-/* -------------------------------------------------------------------------- */
+const esm = true;
 
-const title: PropertyDescriptor = {
-  get(this: TPage) {
-    return this.header ?? this.name;
+const code = { esm },
+  coerceTypes = true,
+  keywords = [dynamicDefaults()],
+  removeAdditional = true,
+  schemas = [Credentials, Data, Page, Importmap],
+  useDefaults = true;
+
+const ajv = new AJV({
+    code,
+    coerceTypes,
+    keywords,
+    removeAdditional,
+    schemas,
+    useDefaults,
+  }),
+  validateData = ajv.getSchema("urn:jsonschema:data"),
+  validateImportmap = ajv.getSchema("urn:jsonschema:importmap");
+
+const consoleError = (error: unknown) => {
+    window.console.error(error);
   },
-};
+  customFetch = async (url: string) => (await fetch(url)).text(),
+  deep = true,
+  getFonts = (fonts: string[]) =>
+    Object.fromEntries(
+      fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
+    ),
+  importmap = reactive({}),
+  nodes = reactive([]),
+  validateCredentials = ajv.getSchema("urn:jsonschema:credentials"),
+  {
+    add,
+    down,
+    leaves: pages,
+    left,
+    remove,
+    right,
+    up,
+  } = useFlatJsonTree(nodes) as IFlatJsonTree;
 
-/* -------------------------------------------------------------------------- */
-
-const {
-  add,
-  down,
-  leaves: pages,
-  left,
-  remove,
-  right,
-  up,
-}: IFlatJsonTree = useFlatJsonTree(nodes) as unknown as IFlatJsonTree;
-
-/* -------------------------------------------------------------------------- */
-/*                                  Functions                                 */
-/* -------------------------------------------------------------------------- */
-
-const validateCredentials: AnyValidateFunction | undefined = ajv.getSchema(
-  "urn:jsonschema:credentials",
-);
-
-/* -------------------------------------------------------------------------- */
-
-const validateData: AnyValidateFunction | undefined = ajv.getSchema(
-  "urn:jsonschema:data",
-);
-
-/* -------------------------------------------------------------------------- */
-
-const validateImportmap: AnyValidateFunction | undefined = ajv.getSchema(
-  "urn:jsonschema:importmap",
-);
-
-/* -------------------------------------------------------------------------- */
-
-const consoleError = (error: unknown): void => {
-  window.console.error(error);
-};
-
-/* -------------------------------------------------------------------------- */
-
-const customFetch = async (url: string): Promise<string> =>
-  (await fetch(url)).text();
-
-/* -------------------------------------------------------------------------- */
-
-const getFonts = (fonts: string[]): Record<string, string> =>
-  Object.fromEntries(
-    fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
-  );
-
-/* -------------------------------------------------------------------------- */
-/*                                  Watchers                                  */
 /* -------------------------------------------------------------------------- */
 
 watch(pages, async (value) => {
   await validateData?.(value);
 });
 
-/* -------------------------------------------------------------------------- */
-
 watch(importmap, async (value) => {
   await validateImportmap?.(value);
 });
-
-/* -------------------------------------------------------------------------- */
 
 watch(pages, (value) => {
   value.forEach((element) => {
@@ -291,12 +178,8 @@ watch(pages, (value) => {
 });
 
 /* -------------------------------------------------------------------------- */
-/*                                   Exports                                  */
-/* -------------------------------------------------------------------------- */
 
 export type { TCredentials, TImportmap, TPage };
-
-/* -------------------------------------------------------------------------- */
 
 export {
   add,
@@ -314,5 +197,3 @@ export {
   up,
   validateCredentials,
 };
-
-/* -------------------------------------------------------------------------- */
