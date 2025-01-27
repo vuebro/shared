@@ -138,8 +138,8 @@ const consoleError = (error: unknown) => {
     Object.fromEntries(
       fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
     ),
-  importmap = reactive({}),
-  nodes = reactive([]),
+  importmap = reactive({} as TImportmap),
+  nodes = reactive([] as TPage[]),
   validateCredentials = ajv.getSchema("urn:jsonschema:credentials"),
   {
     add,
