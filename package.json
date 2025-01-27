@@ -8,7 +8,7 @@
     "build": "bun --bun build.ts"
   },
   "dependencies": {
-    "@vues3/flat-json-tree": "^0.3.32",
+    "@vues3/flat-json-tree": "^0.3.34",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "json-schema-to-ts": "^3.1.1",
@@ -31,7 +31,7 @@
     "jiti": "^2.4.2",
     "prettier": "^3.4.2",
     "prettier-plugin-jsdoc": "^1.3.2",
-    "typescript-eslint": "^8.21.0"
+    "typescript-eslint": "^8.22.0"
   },
   "repository": {
     "type": "git",
