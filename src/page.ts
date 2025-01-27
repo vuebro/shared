@@ -1,9 +1,8 @@
-const id = "uuid",
-  nullable = true;
-
 const $id = "urn:jsonschema:page",
   additionalProperties = false,
+  id = "uuid",
   dynamicDefaults = { id },
+  nullable = true,
   type = "object",
   properties = {
     along: { default: true, type: "boolean" },
