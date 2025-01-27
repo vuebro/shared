@@ -2,9 +2,8 @@ import type { JSONSchema } from "json-schema-to-ts";
 
 /* -------------------------------------------------------------------------- */
 
-const nullable = true;
-
 const $id = "urn:jsonschema:credentials",
+  nullable = true,
   type = "object",
   additionalProperties = {
     properties: {
