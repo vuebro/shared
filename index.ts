@@ -80,11 +80,29 @@ const $children = {
       return this.siblings.filter(({ enabled }) => enabled);
     },
   },
+  esm = true,
+  code = { esm },
+  coerceTypes = true,
+  keywords = [dynamicDefaults()],
+  removeAdditional = true,
+  schemas = [Credentials, Data, Page, Importmap],
+  useDefaults = true,
+  ajv = new AJV({
+    code,
+    coerceTypes,
+    keywords,
+    removeAdditional,
+    schemas,
+    useDefaults,
+  }),
+  deep = true,
   i = {
     get(this: TPage) {
       return this.icon && `i-${this.icon}`;
     },
   },
+  importmap = reactive({} as TImportmap),
+  nodes = reactive([] as TPage[]),
   path = {
     get(this: TPage) {
       const branch = this.branch.slice(1);
@@ -107,49 +125,29 @@ const $children = {
         ?.replace(/^\/?/, "/")
         .replace(/\/?$/, "/");
     },
-  };
-
-const esm = true;
-
-const code = { esm },
-  coerceTypes = true,
-  keywords = [dynamicDefaults()],
-  removeAdditional = true,
-  schemas = [Credentials, Data, Page, Importmap],
-  useDefaults = true;
-
-const ajv = new AJV({
-    code,
-    coerceTypes,
-    keywords,
-    removeAdditional,
-    schemas,
-    useDefaults,
-  }),
+  },
+  validateCredentials = ajv.getSchema("urn:jsonschema:credentials"),
   validateData = ajv.getSchema("urn:jsonschema:data"),
   validateImportmap = ajv.getSchema("urn:jsonschema:importmap");
+
+const {
+  add,
+  down,
+  leaves: pages,
+  left,
+  remove,
+  right,
+  up,
+} = useFlatJsonTree(nodes) as IFlatJsonTree;
 
 const consoleError = (error: unknown) => {
     window.console.error(error);
   },
   customFetch = async (url: string) => (await fetch(url)).text(),
-  deep = true,
   getFonts = (fonts: string[]) =>
     Object.fromEntries(
       fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
-    ),
-  importmap = reactive({} as TImportmap),
-  nodes = reactive([] as TPage[]),
-  validateCredentials = ajv.getSchema("urn:jsonschema:credentials"),
-  {
-    add,
-    down,
-    leaves: pages,
-    left,
-    remove,
-    right,
-    up,
-  } = useFlatJsonTree(nodes) as IFlatJsonTree;
+    );
 
 /* -------------------------------------------------------------------------- */
 
