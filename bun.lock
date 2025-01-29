@@ -4,7 +4,7 @@
     "": {
       "name": "@vues3/shared",
       "dependencies": {
-        "@vues3/flat-json-tree": "^0.3.39",
+        "@vues3/flat-json-tree": "^0.4.0",
         "ajv": "^8.17.1",
         "ajv-keywords": "^5.1.0",
         "json-schema-to-ts": "^3.1.1",
@@ -140,7 +140,7 @@
 
     "@vue/shared": ["@vue/shared@3.5.13", "", {}, "sha512-/hnE/qP5ZoGpol0a5mDi45bOd7t3tjYJBjsgCsivow7D48cJeV5l05RD82lPqi7gRiphZM37rnhW1l6ZoCNNnQ=="],
 
-    "@vues3/flat-json-tree": ["@vues3/flat-json-tree@0.3.40", "", { "dependencies": { "uuid": "^11.0.5", "vue": "^3.5.13" } }, "sha512-pbkVvSZFQ4hAAF1BdNctYzqqg7dh+l/NpWnIQtOylOx+BNF04W5200aeKH1ylQcDaeQ9agvn9+zBcmCSA1GM7A=="],
+    "@vues3/flat-json-tree": ["@vues3/flat-json-tree@0.4.1", "", { "dependencies": { "uuid": "^11.0.5", "vue": "^3.5.13" } }, "sha512-JugzKG+1nYLlJUgrSkyWt+U5zjt/MNggZ+w9VigSzaB3Epreny7i9ccZ63LAXg36YVDc7p/1Lwg/GC06Pung0Q=="],
 
     "acorn": ["acorn@8.14.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA=="],
 
