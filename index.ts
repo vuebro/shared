@@ -133,6 +133,7 @@ const $children = {
 
 const {
   add,
+  atlas,
   down,
   leaves: pages,
   left,
@@ -182,6 +183,7 @@ export type { TCredentials, TImportmap, TPage };
 
 export {
   add,
+  atlas,
   consoleError,
   customFetch,
   deep,
