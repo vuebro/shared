@@ -16,7 +16,7 @@ import Page from "./src/page";
 
 interface IFlatJsonTree {
   add: (pId: string) => string | undefined;
-  atlas: ComputedRef<Record<string, TPage>>;
+  atlas: Record<string, TPage>;
   down: (pId: string) => void;
   leaves: ComputedRef<TPage[]>;
   left: (pId: string) => string | undefined;
