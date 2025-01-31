@@ -158,6 +158,7 @@ watch(importmap, async (value) => {
 });
 
 watch(pages, async (value) => {
+  console.log("PAGES WATCH");
   await validateData?.(value);
   value.forEach((element) => {
     Object.defineProperties(element, {
