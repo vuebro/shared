@@ -153,15 +153,12 @@ const consoleError = (error: unknown) => {
 
 /* -------------------------------------------------------------------------- */
 
-watch(pages, async (value) => {
-  await validateData?.(value);
-});
-
 watch(importmap, async (value) => {
   await validateImportmap?.(value);
 });
 
-watch(pages, (value) => {
+watch(pages, async (value) => {
+  await validateData?.(value);
   value.forEach((element) => {
     Object.defineProperties(element, {
       $children,
