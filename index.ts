@@ -145,12 +145,7 @@ const {
 const consoleError = (error: unknown) => {
     window.console.error(error);
   },
-  customFetch = async (url: string) => (await fetch(url)).text(),
-  getFonts = (fonts: string[]) =>
-    Object.fromEntries(
-      fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
-    );
-
+  customFetch = async (url: string) => (await fetch(url)).text();
 /* -------------------------------------------------------------------------- */
 
 watch(importmap, async (value) => {
@@ -185,7 +180,6 @@ export {
   customFetch,
   deep,
   down,
-  getFonts,
   importmap,
   left,
   nodes,
