@@ -97,6 +97,16 @@ const $children = {
     useDefaults,
   }),
   deep = true,
+  defaultFonts = [
+    "Arial",
+    "Arial Black",
+    "Comic Sans",
+    "Courier New",
+    "Impact",
+    "Lucida Grande",
+    "Times New Roman",
+    "Verdana",
+  ],
   i = {
     get(this: TPage) {
       return this.icon && `i-${this.icon}`;
@@ -179,6 +189,7 @@ export {
   consoleError,
   customFetch,
   deep,
+  defaultFonts,
   down,
   importmap,
   left,
