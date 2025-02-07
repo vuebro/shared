@@ -31,7 +31,7 @@ const $id = "urn:jsonschema:page",
       type: "array",
     },
     class: {
-      default: [],
+      default: ["prose", "max-w-none"],
       description: "Классы",
       items: { type: "string" },
       type: "array",
