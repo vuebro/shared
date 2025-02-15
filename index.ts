@@ -146,7 +146,7 @@ const consoleError = (error: unknown) => {
     window.console.error(error);
   },
   customFetch = async (url: string) => (await fetch(url)).text(),
-  getFonts = (fonts: string[]) =>
+  getFontsObjectFromArray = (fonts: string[]) =>
     Object.fromEntries(
       fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
     );
@@ -185,7 +185,7 @@ export {
   customFetch,
   deep,
   down,
-  getFonts,
+  getFontsObjectFromArray,
   importmap,
   left,
   nodes,
