@@ -117,7 +117,7 @@ const $children = {
   },
   title = {
     get(this: TPage) {
-      return this.header ?? this.name;
+      return this.header && this.header !== "" ? this.header : this.name;
     },
   },
   to = {
