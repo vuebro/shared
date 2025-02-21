@@ -8,11 +8,11 @@
     "build": "tsc && bun build.ts"
   },
   "dependencies": {
-    "@vues3/flat-json-tree": "^0.5.4",
+    "@vues3/flat-json-tree": "^0.5.5",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "json-schema-to-ts": "^3.1.1",
-    "uuid": "^11.0.5",
+    "uuid": "^11.1.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {
@@ -20,7 +20,7 @@
     "@types/bun": "^1.2.2",
     "bun-plugin-dts": "^0.3.0",
     "eslint-config-prettier": "10.0.1",
-    "eslint-import-resolver-typescript": "^3.8.2",
+    "eslint-import-resolver-typescript": "^3.8.3",
     "eslint-plugin-import-x": "^4.6.1",
     "eslint-plugin-perfectionist": "^4.9.0",
     "eslint-plugin-prettier": "^5.2.3",
