@@ -4,7 +4,7 @@
     "": {
       "name": "@vues3/shared",
       "dependencies": {
-        "@vues3/flat-json-tree": "^0.6.0",
+        "@vues3/flat-json-tree": "^0.6.1",
         "ajv": "^8.17.1",
         "ajv-keywords": "^5.1.0",
         "json-schema-to-ts": "^3.1.1",
@@ -130,7 +130,7 @@
 
     "@vue/shared": ["@vue/shared@3.5.13", "", {}, "sha512-/hnE/qP5ZoGpol0a5mDi45bOd7t3tjYJBjsgCsivow7D48cJeV5l05RD82lPqi7gRiphZM37rnhW1l6ZoCNNnQ=="],
 
-    "@vues3/flat-json-tree": ["@vues3/flat-json-tree@0.6.0", "", { "dependencies": { "@vueuse/core": "12.7.0", "uuid": "^11.1.0", "vue": "^3.5.13" } }, "sha512-l2DusytwGio7AiVcM3EabMILGUSdxlVsL4lCYL8WXluqzLu/sW4wL2GlVsui+DXIGwC2REvayXgKskCBUpMRNQ=="],
+    "@vues3/flat-json-tree": ["@vues3/flat-json-tree@0.6.1", "", { "dependencies": { "@vueuse/core": "12.7.0", "uuid": "^11.1.0", "vue": "^3.5.13" } }, "sha512-uLgL8tgmm3ZgF2UARKKABhWNpUrZmmY/AEFnGYSNlCEwZ4dmJLrHTp2PpFoNxtDfLM3/1UqMAdgt9c3FiOYYng=="],
 
     "@vueuse/core": ["@vueuse/core@12.7.0", "", { "dependencies": { "@types/web-bluetooth": "^0.0.20", "@vueuse/metadata": "12.7.0", "@vueuse/shared": "12.7.0", "vue": "^3.5.13" } }, "sha512-jtK5B7YjZXmkGNHjviyGO4s3ZtEhbzSgrbX+s5o+Lr8i2nYqNyHuPVOeTdM1/hZ5Tkxg/KktAuAVDDiHMraMVA=="],
 
