@@ -16,10 +16,10 @@ import Page from "./src/page";
 
 interface IFlatJsonTree {
   add: (pId: string) => string | undefined;
-  atlas: Record<string, TPage>;
   down: (pId: string) => void;
   leaves: ComputedRef<TPage[]>;
   left: (pId: string) => string | undefined;
+  objLeaves: Record<string, TPage>;
   remove: (pId: string) => string | undefined;
   right: (pId: string) => string | undefined;
   up: (pId: string) => void;
@@ -133,14 +133,14 @@ const $children = {
 
 const {
   add,
-  atlas,
   down,
   leaves: pages,
   left,
+  objLeaves: atlas,
   remove,
   right,
   up,
-} = useFlatJsonTree(nodes) as IFlatJsonTree;
+} = useFlatJsonTree(nodes) as unknown as IFlatJsonTree;
 
 const consoleError = (error: unknown) => {
     window.console.error(error);
