@@ -154,24 +154,27 @@ const consoleError = (error: unknown) => {
 /* -------------------------------------------------------------------------- */
 
 watch(importmap, async (value) => {
-  await validateImportmap?.(value);
+  if (!(await validateImportmap?.(value))) importmap.imports = {};
 });
 
 watch(pages, async (value) => {
-  await validateData?.(value);
-  value.forEach((element) => {
-    Object.defineProperties(element, {
-      $children,
-      $index,
-      $next,
-      $prev,
-      $siblings,
-      i,
-      path,
-      title,
-      to,
+  if (!(await validateData?.(value))) {
+    nodes.length = 0;
+    nodes.push({} as TPage);
+  } else
+    value.forEach((element) => {
+      Object.defineProperties(element, {
+        $children,
+        $index,
+        $next,
+        $prev,
+        $siblings,
+        i,
+        path,
+        title,
+        to,
+      });
     });
-  });
 });
 
 /* -------------------------------------------------------------------------- */
