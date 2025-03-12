@@ -5,11 +5,6 @@ const $id = "urn:jsonschema:page",
   nullable = true,
   type = "object",
   properties = {
-    alt: {
-      default: [],
-      items: { type: "string" },
-      type: "array",
-    },
     changefreq: {
       default: null,
       enum: [
