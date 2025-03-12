@@ -7,8 +7,9 @@ import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 import { configs as sonarjs } from "eslint-plugin-sonarjs";
 import tseslint, { configs } from "typescript-eslint";
 
-const ignores = ["**/index.js", "**/index.d.ts"],
-  projectService = true,
+const allowDefaultProject = ["eslint.config.ts"],
+  ignores = ["**/dist"],
+  projectService = { allowDefaultProject },
   tsconfigRootDir = import.meta.dirname,
   parserOptions = { projectService, tsconfigRootDir },
   languageOptions = { parserOptions },
@@ -17,12 +18,13 @@ const ignores = ["**/index.js", "**/index.d.ts"],
     "import-x/no-extraneous-dependencies": [
       "error",
       {
-        devDependencies: ["**/eslint.config.ts", "**/build.ts"],
+        devDependencies: ["**/eslint.config.ts"],
         optionalDependencies: false,
       },
     ],
   };
 
+/** @internal */
 export default tseslint.config(
   { ignores },
   { rules },
