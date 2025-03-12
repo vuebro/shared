@@ -9,7 +9,7 @@
     "build": "tsc --emitDeclarationOnly && bun build ./index.ts --external vue --outdir dist"
   },
   "dependencies": {
-    "@vues3/flat-json-tree": "^0.6.13",
+    "@vues3/flat-json-tree": "^0.6.14",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "json-schema-to-ts": "^3.1.1",
