@@ -7,8 +7,6 @@ import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 import { configs as sonarjs } from "eslint-plugin-sonarjs";
 import tseslint, { configs } from "typescript-eslint";
 
-/* -------------------------------------------------------------------------- */
-
 const ignores = ["**/index.js", "**/index.d.ts"],
   projectService = true,
   tsconfigRootDir = import.meta.dirname,
@@ -24,8 +22,6 @@ const ignores = ["**/index.js", "**/index.d.ts"],
       },
     ],
   };
-
-/* -------------------------------------------------------------------------- */
 
 export default tseslint.config(
   { ignores },
