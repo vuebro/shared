@@ -1,6 +1,6 @@
 .github/
 .vscode/
-src/
+./src/
 .prettierrc.json
 eslint.config.ts
 bun.lock
