@@ -129,7 +129,7 @@
 
     "@vue/shared": ["@vue/shared@3.5.13", "", {}, "sha512-/hnE/qP5ZoGpol0a5mDi45bOd7t3tjYJBjsgCsivow7D48cJeV5l05RD82lPqi7gRiphZM37rnhW1l6ZoCNNnQ=="],
 
-    "@vues3/flat-json-tree": ["@vues3/flat-json-tree@0.6.13", "", { "dependencies": { "@vueuse/core": "13.0.0", "uuid": "^11.1.0", "vue": "^3.5.13" } }, "sha512-Nzh62HtH89cMkAQ7wilpv3QEhJp+HGNkLvlk5Xe+OIOsa9gsXRzNPqABhD+AoMRkuT5Y1VZ/SjXJxa4JZ1KIDw=="],
+    "@vues3/flat-json-tree": ["@vues3/flat-json-tree@0.6.14", "", { "dependencies": { "@vueuse/core": "13.0.0", "uuid": "^11.1.0", "vue": "^3.5.13" } }, "sha512-FKMbX3aW4lKc6GLb2+POnXws7YZUPt0CzsAsxIgl8QrSTBjbupcS9P0/f2A2yDq1n8IY6tRhDQNWEyTG/T7cHQ=="],
 
     "@vueuse/core": ["@vueuse/core@13.0.0", "", { "dependencies": { "@types/web-bluetooth": "^0.0.21", "@vueuse/metadata": "13.0.0", "@vueuse/shared": "13.0.0" }, "peerDependencies": { "vue": "^3.5.0" } }, "sha512-rkgb4a8/0b234lMGCT29WkCjPfsX0oxrIRR7FDndRoW3FsaC9NBzefXg/9TLhAgwM11f49XnutshM4LzJBrQ5g=="],
 
