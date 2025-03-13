@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc --emitDeclarationOnly && bun build ./src/index.ts --minify --external '*' --outdir dist"
+    "build": "tsc --emitDeclarationOnly && bun build ./src/index.ts --minify --packages external --outdir dist"
   },
   "dependencies": {
     "@vues3/flat-json-tree": "^0.6.17",
