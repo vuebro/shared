@@ -12,8 +12,6 @@ import Data from "./types/data";
 import Importmap from "./types/importmap";
 import Page from "./types/page";
 
-/* -------------------------------------------------------------------------- */
-
 interface IFlatJsonTree {
   add: (pId: string) => string | undefined;
   down: (pId: string) => void;
@@ -24,8 +22,6 @@ interface IFlatJsonTree {
   right: (pId: string) => string | undefined;
   up: (pId: string) => void;
 }
-
-/* -------------------------------------------------------------------------- */
 
 type TCredentials = FromSchema<typeof Credentials>;
 
@@ -50,11 +46,7 @@ type TPage = FromSchema<typeof Page> & {
   to?: string;
 };
 
-/* -------------------------------------------------------------------------- */
-
 dynamicDefaults.DEFAULTS.uuid = () => () => v4();
-
-/* -------------------------------------------------------------------------- */
 
 const $children = {
     get(this: TPage) {
@@ -151,8 +143,6 @@ const consoleError = (error: unknown) => {
       fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
     );
 
-/* -------------------------------------------------------------------------- */
-
 watch(importmap, async (value) => {
   if (!(await validateImportmap?.(value))) importmap.imports = {};
 });
@@ -176,8 +166,6 @@ watch(pages, async (value) => {
       });
     });
 });
-
-/* -------------------------------------------------------------------------- */
 
 export type { TCredentials, TImportmap, TPage };
 
