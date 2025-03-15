@@ -11,7 +11,6 @@ import Credentials from "./types/credentials";
 import Data from "./types/data";
 import Importmap from "./types/importmap";
 import Page from "./types/page";
-
 interface IFlatJsonTree {
   add: (pId: string) => string | undefined;
   down: (pId: string) => void;
@@ -22,11 +21,8 @@ interface IFlatJsonTree {
   right: (pId: string) => string | undefined;
   up: (pId: string) => void;
 }
-
 type TCredentials = FromSchema<typeof Credentials>;
-
 type TImportmap = FromSchema<typeof Importmap>;
-
 type TPage = FromSchema<typeof Page> & {
   $children: TPage[];
   $index: number;
@@ -45,108 +41,41 @@ type TPage = FromSchema<typeof Page> & {
   title?: string;
   to?: string;
 };
-
 dynamicDefaults.DEFAULTS.uuid = () => () => v4();
-
-const $children = {
-    get(this: TPage) {
-      return this.children.filter(({ enabled }) => enabled);
-    },
-  },
-  $index = {
-    get(this: TPage) {
-      return this.$siblings.findIndex(({ id }) => this.id === id);
-    },
-  },
-  $next = {
-    get(this: TPage) {
-      return this.$siblings[this.$index + 1];
-    },
-  },
-  $prev = {
-    get(this: TPage) {
-      return this.$siblings[this.$index - 1];
-    },
-  },
-  $siblings = {
-    get(this: TPage) {
-      return this.siblings.filter(({ enabled }) => enabled);
-    },
-  },
-  esm = true,
-  code = { esm },
-  coerceTypes = true,
-  keywords = [dynamicDefaults()],
-  removeAdditional = true,
-  schemas = [Credentials, Data, Page, Importmap],
-  useDefaults = true,
-  ajv = new AJV({
-    code,
-    coerceTypes,
-    keywords,
-    removeAdditional,
-    schemas,
-    useDefaults,
+const ajv = new AJV({
+    code: { esm: true },
+    coerceTypes: true,
+    keywords: [dynamicDefaults()],
+    removeAdditional: true,
+    schemas: [Credentials, Data, Page, Importmap],
+    useDefaults: true,
   }),
-  deep = true,
-  i = {
-    get(this: TPage) {
-      return this.icon && `i-${this.icon}`;
-    },
-  },
-  importmap = reactive({} as TImportmap),
-  nodes = reactive([] as TPage[]),
-  path = {
-    get(this: TPage) {
-      const branch = this.branch.slice(1);
-      return branch.some(({ name }) => !name)
-        ? undefined
-        : branch
-            .map(({ name }) => name)
-            .join("/")
-            .replaceAll(" ", "_");
-    },
-  },
-  title = {
-    get(this: TPage) {
-      return ["", undefined].includes(this.header) ? this.name : this.header;
-    },
-  },
-  to = {
-    get(this: TPage) {
-      return (this.loc?.replaceAll(" ", "_") ?? this.path)
-        ?.replace(/^\/?/, "/")
-        .replace(/\/?$/, "/");
-    },
-  },
-  validateCredentials = ajv.getSchema("urn:jsonschema:credentials"),
-  validateData = ajv.getSchema("urn:jsonschema:data"),
-  validateImportmap = ajv.getSchema("urn:jsonschema:importmap");
-
-const {
-  add,
-  down,
-  leaves: pages,
-  left,
-  objLeaves: atlas,
-  remove,
-  right,
-  up,
-} = useFlatJsonTree(nodes) as unknown as IFlatJsonTree;
-
-const consoleError = (error: unknown) => {
+  consoleError = (error: unknown) => {
     window.console.error(error);
   },
   customFetch = async (url: string) => (await fetch(url)).text(),
   getFontsObjectFromArray = (fonts: string[]) =>
     Object.fromEntries(
       fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
-    );
-
+    ),
+  importmap = reactive({} as TImportmap),
+  nodes = reactive([] as TPage[]),
+  validateCredentials = ajv.getSchema("urn:jsonschema:credentials"),
+  validateData = ajv.getSchema("urn:jsonschema:data"),
+  validateImportmap = ajv.getSchema("urn:jsonschema:importmap"),
+  {
+    add,
+    down,
+    leaves: pages,
+    left,
+    objLeaves: atlas,
+    remove,
+    right,
+    up,
+  } = useFlatJsonTree(nodes) as unknown as IFlatJsonTree;
 watch(importmap, async (value) => {
   if (!(await validateImportmap?.(value))) importmap.imports = {};
 });
-
 watch(pages, async (value) => {
   if (!(await validateData?.(value))) {
     nodes.length = 0;
@@ -154,27 +83,56 @@ watch(pages, async (value) => {
   } else
     value.forEach((element) => {
       Object.defineProperties(element, {
-        $children,
-        $index,
-        $next,
-        $prev,
-        $siblings,
-        i,
-        path,
-        title,
-        to,
+        $children: {
+          get: () => element.children.filter(({ enabled }) => enabled),
+        },
+        $index: {
+          get: () => element.$siblings.findIndex(({ id }) => element.id === id),
+        },
+        $next: {
+          get: () => element.$siblings[element.$index + 1],
+        },
+        $prev: {
+          get: () => element.$siblings[element.$index - 1],
+        },
+        $siblings: {
+          get: () => element.siblings.filter(({ enabled }) => enabled),
+        },
+        i: {
+          get: () => element.icon && `i-${element.icon}`,
+        },
+        path: {
+          get: () => {
+            const branch = element.branch.slice(1);
+            return branch.some(({ name }) => !name)
+              ? undefined
+              : branch
+                  .map(({ name }) => name)
+                  .join("/")
+                  .replaceAll(" ", "_");
+          },
+        },
+        title: {
+          get: () =>
+            ["", undefined].includes(element.header)
+              ? element.name
+              : element.header,
+        },
+        to: {
+          get: () =>
+            (element.loc?.replaceAll(" ", "_") ?? element.path)
+              ?.replace(/^\/?/, "/")
+              .replace(/\/?$/, "/"),
+        },
       });
     });
 });
-
 export type { TCredentials, TImportmap, TPage };
-
 export {
   add,
   atlas,
   consoleError,
   customFetch,
-  deep,
   down,
   getFontsObjectFromArray,
   importmap,
