@@ -1,10 +1,8 @@
-const $id = "urn:jsonschema:page",
-  additionalProperties = false,
-  id = "uuid",
-  dynamicDefaults = { id },
-  nullable = true,
-  type = "object",
-  properties = {
+export default {
+  $id: "urn:jsonschema:page",
+  additionalProperties: false,
+  dynamicDefaults: { id: "uuid" },
+  properties: {
     changefreq: {
       default: null,
       enum: [
@@ -17,7 +15,7 @@ const $id = "urn:jsonschema:page",
         "never",
         null,
       ],
-      nullable,
+      nullable: true,
       type: "string",
     },
     children: {
@@ -31,7 +29,7 @@ const $id = "urn:jsonschema:page",
       items: { type: "string" },
       type: "array",
     },
-    description: { default: null, nullable, type: "string" },
+    description: { default: null, nullable: true, type: "string" },
     enabled: { default: true, type: "boolean" },
     flat: { default: true, type: "boolean" },
     header: { type: "string" },
@@ -53,14 +51,14 @@ const $id = "urn:jsonschema:page",
       items: { type: "string" },
       type: "array",
     },
-    lastmod: { default: null, nullable, type: "string" },
-    loc: { default: null, nullable, type: "string" },
-    name: { default: null, nullable, type: "string" },
+    lastmod: { default: null, nullable: true, type: "string" },
+    loc: { default: null, nullable: true, type: "string" },
+    name: { default: null, nullable: true, type: "string" },
     priority: {
       default: null,
       maximum: 1,
       minimum: 0,
-      nullable,
+      nullable: true,
       type: "number",
     },
     type: {
@@ -80,17 +78,9 @@ const $id = "urn:jsonschema:page",
         "video.other",
         null,
       ],
-      nullable,
+      nullable: true,
       type: "string",
     },
-  } as const;
-
-/* -------------------------------------------------------------------------- */
-
-export default {
-  $id,
-  additionalProperties,
-  dynamicDefaults,
-  properties,
-  type,
+  },
+  type: "object",
 } as const;
