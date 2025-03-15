@@ -1,25 +1,15 @@
 import type { JSONSchema } from "json-schema-to-ts";
-
-/* -------------------------------------------------------------------------- */
-
-const $id = "urn:jsonschema:credentials",
-  nullable = true,
-  type = "object",
-  additionalProperties = {
-    properties: {
-      accessKeyId: { default: null, nullable, type: "string" },
-      Bucket: { default: null, nullable, type: "string" },
-      endpoint: { default: null, nullable, type: "string" },
-      region: { default: null, nullable, type: "string" },
-      secretAccessKey: { default: null, nullable, type: "string" },
-    },
-    type,
-  } as const;
-
-/* -------------------------------------------------------------------------- */
-
 export default {
-  $id,
-  additionalProperties,
-  type,
+  $id: "urn:jsonschema:credentials",
+  additionalProperties: {
+    properties: {
+      accessKeyId: { default: null, nullable: true, type: "string" },
+      Bucket: { default: null, nullable: true, type: "string" },
+      endpoint: { default: null, nullable: true, type: "string" },
+      region: { default: null, nullable: true, type: "string" },
+      secretAccessKey: { default: null, nullable: true, type: "string" },
+    },
+    type: "object",
+  },
+  type: "object",
 } as const satisfies JSONSchema;
