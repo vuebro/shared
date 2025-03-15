@@ -42,7 +42,33 @@ type TPage = FromSchema<typeof Page> & {
   to?: string;
 };
 dynamicDefaults.DEFAULTS.uuid = () => () => v4();
-const ajv = new AJV({
+
+const $children = {
+    get(this: TPage) {
+      return this.children.filter(({ enabled }) => enabled);
+    },
+  },
+  $index = {
+    get(this: TPage) {
+      return this.$siblings.findIndex(({ id }) => this.id === id);
+    },
+  },
+  $next = {
+    get(this: TPage) {
+      return this.$siblings[this.$index + 1];
+    },
+  },
+  $prev = {
+    get(this: TPage) {
+      return this.$siblings[this.$index - 1];
+    },
+  },
+  $siblings = {
+    get(this: TPage) {
+      return this.siblings.filter(({ enabled }) => enabled);
+    },
+  },
+  ajv = new AJV({
     code: { esm: true },
     coerceTypes: true,
     keywords: [dynamicDefaults()],
@@ -58,8 +84,36 @@ const ajv = new AJV({
     Object.fromEntries(
       fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
     ),
+  i = {
+    get(this: TPage) {
+      return this.icon && `i-${this.icon}`;
+    },
+  },
   importmap = reactive({} as TImportmap),
   nodes = reactive([] as TPage[]),
+  path = {
+    get(this: TPage) {
+      const branch = this.branch.slice(1);
+      return branch.some(({ name }) => !name)
+        ? undefined
+        : branch
+            .map(({ name }) => name)
+            .join("/")
+            .replaceAll(" ", "_");
+    },
+  },
+  title = {
+    get(this: TPage) {
+      return ["", undefined].includes(this.header) ? this.name : this.header;
+    },
+  },
+  to = {
+    get(this: TPage) {
+      return (this.loc?.replaceAll(" ", "_") ?? this.path)
+        ?.replace(/^\/?/, "/")
+        .replace(/\/?$/, "/");
+    },
+  },
   validateCredentials = ajv.getSchema("urn:jsonschema:credentials"),
   validateData = ajv.getSchema("urn:jsonschema:data"),
   validateImportmap = ajv.getSchema("urn:jsonschema:importmap"),
@@ -83,47 +137,15 @@ watch(pages, async (value) => {
   } else
     value.forEach((element) => {
       Object.defineProperties(element, {
-        $children: {
-          get: () => element.children.filter(({ enabled }) => enabled),
-        },
-        $index: {
-          get: () => element.$siblings.findIndex(({ id }) => element.id === id),
-        },
-        $next: {
-          get: () => element.$siblings[element.$index + 1],
-        },
-        $prev: {
-          get: () => element.$siblings[element.$index - 1],
-        },
-        $siblings: {
-          get: () => element.siblings.filter(({ enabled }) => enabled),
-        },
-        i: {
-          get: () => element.icon && `i-${element.icon}`,
-        },
-        path: {
-          get: () => {
-            const branch = element.branch.slice(1);
-            return branch.some(({ name }) => !name)
-              ? undefined
-              : branch
-                  .map(({ name }) => name)
-                  .join("/")
-                  .replaceAll(" ", "_");
-          },
-        },
-        title: {
-          get: () =>
-            ["", undefined].includes(element.header)
-              ? element.name
-              : element.header,
-        },
-        to: {
-          get: () =>
-            (element.loc?.replaceAll(" ", "_") ?? element.path)
-              ?.replace(/^\/?/, "/")
-              .replace(/\/?$/, "/"),
-        },
+        $children,
+        $index,
+        $next,
+        $prev,
+        $siblings,
+        i,
+        path,
+        title,
+        to,
       });
     });
 });
