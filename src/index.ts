@@ -42,7 +42,6 @@ type TPage = FromSchema<typeof Page> & {
   to?: string;
 };
 dynamicDefaults.DEFAULTS.uuid = () => () => v4();
-
 const $children = {
     get(this: TPage) {
       return this.children.filter(({ enabled }) => enabled);
