@@ -108,9 +108,7 @@ const $children = {
   },
   to = {
     get(this: TPage) {
-      return (this.loc?.replaceAll(" ", "_") ?? this.path)
-        ?.replace(/^\/?/, "/")
-        .replace(/\/?$/, "/");
+      return this.path?.replace(/^\/?/, "/").replace(/\/?$/, "/");
     },
   },
   validateCredentials = ajv.getSchema("urn:jsonschema:credentials"),
