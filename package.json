@@ -9,7 +9,7 @@
     "build": "tsc && bun build ./src/index.ts --packages external --outdir dist"
   },
   "dependencies": {
-    "@vues3/flat-json-tree": "^0.6.35",
+    "@vues3/flat-json-tree": "^0.6.36",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "json-schema-to-ts": "^3.1.1",
@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.24.0",
-    "@types/bun": "^1.2.9",
+    "@types/bun": "^1.2.10",
     "eslint-config-prettier": "10.1.2",
     "eslint-import-resolver-typescript": "^4.3.2",
     "eslint-plugin-import-x": "^4.10.5",
