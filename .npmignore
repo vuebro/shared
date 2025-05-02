@@ -1,8 +1,5 @@
 .github/
 .vscode/
 src/
-.prettierrc.json
 eslint.config.ts
-bun.lock
-index.ts
 tsconfig.json
