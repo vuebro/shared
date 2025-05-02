@@ -15,6 +15,7 @@ export default tseslint.config(
           optionalDependencies: false,
         },
       ],
+      "no-use-before-define": "off",
     },
   },
   {
