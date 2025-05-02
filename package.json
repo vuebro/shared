@@ -6,10 +6,10 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc && bun build ./src/index.ts --packages external --outdir dist"
+    "build": "tsc"
   },
   "dependencies": {
-    "@vues3/flat-json-tree": "^0.6.37",
+    "@vues3/flat-json-tree": "^0.7.1",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "json-schema-to-ts": "^3.1.1",
@@ -18,14 +18,14 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.1",
-    "@types/bun": "^1.2.10",
-    "eslint-config-prettier": "10.1.2",
+    "@types/node": "^22.15.3",
+    "eslint-config-prettier": "^10.1.2",
     "eslint-import-resolver-typescript": "^4.3.4",
-    "eslint-plugin-import-x": "^4.10.6",
-    "eslint-plugin-perfectionist": "^4.12.2",
+    "eslint-plugin-import-x": "^4.11.0",
+    "eslint-plugin-perfectionist": "^4.12.3",
     "eslint-plugin-prettier": "^5.2.6",
     "jiti": "2.4.2",
-    "typescript-eslint": "^8.31.0"
+    "typescript-eslint": "^8.31.1"
   },
   "repository": {
     "type": "git",
@@ -35,7 +35,10 @@
     "vues3",
     "shared"
   ],
-  "author": "jbruwes",
+  "author": {
+    "name": "Jerry Bruwes",
+    "email": "jbruwes@gmail.com"
+  },
   "license": "AGPL",
   "bugs": {
     "url": "https://github.com/vues3/shared/issues"
