@@ -9,7 +9,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@vues3/flat-json-tree": "^0.7.1",
+    "@vues3/flat-json-tree": "^0.7.3",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "json-schema-to-ts": "^3.1.1",
@@ -23,7 +23,7 @@
     "eslint-import-resolver-typescript": "^4.3.4",
     "eslint-plugin-import-x": "^4.11.0",
     "eslint-plugin-perfectionist": "^4.12.3",
-    "eslint-plugin-prettier": "^5.2.6",
+    "eslint-plugin-prettier": "^5.3.1",
     "jiti": "2.4.2",
     "typescript-eslint": "^8.31.1"
   },
