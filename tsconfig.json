@@ -18,5 +18,8 @@
     "strict": true,
     "target": "esnext"
   },
-  "include": ["./src/**/*.ts"]
+  "include": ["./src/**/*.ts"],
+  "tsc-alias": {
+    "resolveFullPaths": true
+  }
 }
