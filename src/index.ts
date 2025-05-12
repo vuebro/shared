@@ -3,7 +3,7 @@ import type { ComputedRef } from "vue";
 
 import useFlatJsonTree from "@vues3/flat-json-tree";
 import AJV from "ajv";
-import dynamicDefaults from "ajv-keywords/dist/definitions/dynamicDefaults";
+import dynamicDefaults from "ajv-keywords/dist/definitions/dynamicDefaults.js";
 import { v4 } from "uuid";
 import { reactive, watch } from "vue";
 
