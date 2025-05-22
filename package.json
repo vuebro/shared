@@ -1,5 +1,5 @@
 {
-  "name": "@vues3/shared",
+  "name": "@vuebro/shared",
   "version": "0.5.19",
   "type": "module",
   "main": "dist/index.js",
@@ -9,7 +9,7 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@vues3/flat-json-tree": "^0.7.8",
+    "@vuebro/flat-json-tree": "^0.7.9",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "json-schema-to-ts": "^3.1.1",
@@ -18,10 +18,10 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
-    "@types/node": "^22.15.18",
+    "@types/node": "^22.15.21",
     "eslint-config-prettier": "^10.1.5",
-    "eslint-import-resolver-typescript": "^4.3.4",
-    "eslint-plugin-import-x": "^4.11.1",
+    "eslint-import-resolver-typescript": "^4.3.5",
+    "eslint-plugin-import-x": "^4.12.2",
     "eslint-plugin-perfectionist": "^4.13.0",
     "eslint-plugin-prettier": "^5.4.0",
     "jiti": "2.4.2",
@@ -30,10 +30,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vues3/shared.git"
+    "url": "git+https://github.com/vuebro/shared.git"
   },
   "keywords": [
-    "vues3",
+    "vuebro",
     "shared"
   ],
   "author": {
@@ -42,8 +42,8 @@
   },
   "license": "AGPL",
   "bugs": {
-    "url": "https://github.com/vues3/shared/issues"
+    "url": "https://github.com/vuebro/shared/issues"
   },
-  "homepage": "https://github.com/vues3/shared#readme",
-  "description": "@vues3/shared"
+  "homepage": "https://github.com/vuebro/shared#readme",
+  "description": "@vuebro/shared"
 }
