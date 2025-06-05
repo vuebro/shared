@@ -9,7 +9,7 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@vuebro/flat-json-tree": "^0.7.11",
+    "@vuebro/flat-json-tree": "^0.7.13",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "json-schema-to-ts": "^3.1.1",
@@ -22,11 +22,11 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-import-resolver-typescript": "^4.4.2",
     "eslint-plugin-import-x": "^4.15.0",
-    "eslint-plugin-perfectionist": "^4.13.0",
+    "eslint-plugin-perfectionist": "^4.14.0",
     "eslint-plugin-prettier": "^5.4.1",
-    "jiti": "2.4.2",
+    "jiti": "^2.4.2",
     "tsc-alias": "^1.8.16",
-    "typescript-eslint": "^8.33.0"
+    "typescript-eslint": "^8.33.1"
   },
   "repository": {
     "type": "git",
