@@ -9,8 +9,10 @@ import { reactive, watch } from "vue";
 
 import Credentials from "./types/credentials";
 import Data from "./types/data";
+import Feed from "./types/feed";
 import Importmap from "./types/importmap";
 import Page from "./types/page";
+
 interface IFlatJsonTree {
   add: (pId: string) => string | undefined;
   down: (pId: string) => void;
@@ -72,7 +74,7 @@ const $children = {
     coerceTypes: true,
     keywords: [dynamicDefaults()],
     removeAdditional: true,
-    schemas: [Credentials, Data, Page, Importmap],
+    schemas: [Credentials, Data, Page, Importmap, Feed],
     useDefaults: true,
   }),
   consoleError = (error: unknown) => {
@@ -113,6 +115,7 @@ const $children = {
   },
   validateCredentials = ajv.getSchema("urn:jsonschema:credentials"),
   validateData = ajv.getSchema("urn:jsonschema:data"),
+  validateFeed = ajv.getSchema("urn:jsonschema:feed"),
   validateImportmap = ajv.getSchema("urn:jsonschema:importmap"),
   {
     add,
@@ -162,4 +165,5 @@ export {
   right,
   up,
   validateCredentials,
+  validateFeed,
 };
