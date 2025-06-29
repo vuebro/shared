@@ -1,5 +1,6 @@
 export default {
   $id: "urn:jsonschema:page",
+  $schema: "https://json-schema.org/draft/2020-12/schema",
   additionalProperties: false,
   dynamicDefaults: { id: "uuid" },
   properties: {
