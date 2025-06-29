@@ -24,6 +24,7 @@ interface IFlatJsonTree {
   up: (pId: string) => void;
 }
 type TCredentials = FromSchema<typeof Credentials>;
+type TFeed = FromSchema<typeof Feed>;
 type TImportmap = FromSchema<typeof Importmap>;
 type TPage = FromSchema<typeof Page> & {
   $children: TPage[];
@@ -81,6 +82,7 @@ const $children = {
     window.console.error(error);
   },
   customFetch = async (url: string) => (await fetch(url)).text(),
+  feed = reactive({} as TFeed),
   getFontsObjectFromArray = (fonts: string[]) =>
     Object.fromEntries(
       fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
@@ -127,6 +129,9 @@ const $children = {
     right,
     up,
   } = useFlatJsonTree(nodes) as unknown as IFlatJsonTree;
+watch(feed, async (value) => {
+  if (!(await validateFeed?.(value))) feed.items = [];
+});
 watch(importmap, async (value) => {
   if (!(await validateImportmap?.(value))) importmap.imports = {};
 });
@@ -156,6 +161,7 @@ export {
   consoleError,
   customFetch,
   down,
+  feed,
   getFontsObjectFromArray,
   importmap,
   left,
@@ -165,5 +171,4 @@ export {
   right,
   up,
   validateCredentials,
-  validateFeed,
 };
