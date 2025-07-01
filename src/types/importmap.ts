@@ -2,7 +2,6 @@ import type { JSONSchema } from "json-schema-to-ts";
 
 export default {
   $id: "urn:jsonschema:importmap",
-  $schema: "https://json-schema.org/draft/2020-12/schema",
   additionalProperties: false,
   properties: {
     imports: {
