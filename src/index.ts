@@ -5,7 +5,7 @@ import useFlatJsonTree from "@vuebro/flat-json-tree";
 import AJV from "ajv";
 import dynamicDefaults from "ajv-keywords/dist/definitions/dynamicDefaults.js";
 import { v4 } from "uuid";
-import { reactive, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 
 import Credentials from "./types/credentials";
 import Data from "./types/data";
@@ -82,7 +82,7 @@ const $children = {
     window.console.error(error);
   },
   customFetch = async (url: string) => (await fetch(url)).text(),
-  feed = reactive({} as TFeed),
+  feed = ref({} as TFeed),
   getFontsObjectFromArray = (fonts: string[]) =>
     Object.fromEntries(
       fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
@@ -130,10 +130,10 @@ const $children = {
     up,
   } = useFlatJsonTree(nodes) as unknown as IFlatJsonTree;
 watch(feed, async (value) => {
-  if (!(await validateFeed?.(value))) feed.items = [];
+  await validateFeed?.(value);
 });
 watch(importmap, async (value) => {
-  if (!(await validateImportmap?.(value))) importmap.imports = {};
+  await validateImportmap?.(value);
 });
 watch(pages, async (value) => {
   if (!(await validateData?.(value))) {
