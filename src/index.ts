@@ -3,6 +3,7 @@ import type { ComputedRef } from "vue";
 
 import useFlatJsonTree from "@vuebro/flat-json-tree";
 import AJV from "ajv";
+import addFormats from "ajv-formats";
 import dynamicDefaults from "ajv-keywords/dist/definitions/dynamicDefaults.js";
 import { v4 } from "uuid";
 import { reactive, watch } from "vue";
@@ -45,6 +46,15 @@ type TPage = FromSchema<typeof Page> & {
   to?: string;
 };
 dynamicDefaults.DEFAULTS.uuid = () => () => v4();
+const ajv = new AJV({
+  code: { esm: true },
+  coerceTypes: true,
+  keywords: [dynamicDefaults()],
+  removeAdditional: true,
+  schemas: [Credentials, Data, Page, Importmap, Feed],
+  useDefaults: true,
+});
+addFormats(ajv);
 const $children = {
     get(this: TPage) {
       return this.children.filter(({ enabled }) => enabled);
@@ -70,14 +80,6 @@ const $children = {
       return this.siblings.filter(({ enabled }) => enabled);
     },
   },
-  ajv = new AJV({
-    code: { esm: true },
-    coerceTypes: true,
-    keywords: [dynamicDefaults()],
-    removeAdditional: true,
-    schemas: [Credentials, Data, Page, Importmap, Feed],
-    useDefaults: true,
-  }),
   consoleError = (error: unknown) => {
     window.console.error(error);
   },
