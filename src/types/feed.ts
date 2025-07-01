@@ -119,6 +119,7 @@ export default {
       type: "string",
     },
     items: {
+      default: [],
       items: {
         additionalProperties: false,
         anyOf: [{ required: ["content_html"] }, { required: ["content_text"] }],
