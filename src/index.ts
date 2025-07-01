@@ -154,7 +154,7 @@ watch(pages, async (value) => {
       });
     });
 });
-export type { TCredentials, TImportmap, TPage };
+export type { TCredentials, TFeed, TImportmap, TPage };
 export {
   add,
   atlas,
