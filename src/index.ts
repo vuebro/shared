@@ -109,9 +109,7 @@ const $children = {
   },
   title = {
     get(this: TPage) {
-      return ["", undefined].includes(this.header)
-        ? (this.name ?? undefined)
-        : this.header;
+      return ["", undefined].includes(this.header) ? this.name : this.header;
     },
   },
   to = {
