@@ -45,7 +45,7 @@ type TPage = FromSchema<typeof Page> & {
   to?: string;
 };
 dynamicDefaults.DEFAULTS.uuid = () => () =>
-  ((performance.now() * Math.random()) % 1).toString(36).slice(2);
+  (Date.now() % Math.random()).toString(36).slice(2);
 const ajv = new AJV({
   code: { esm: true },
   coerceTypes: true,
