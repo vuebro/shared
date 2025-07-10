@@ -1,6 +1,6 @@
 {
   "name": "@vuebro/shared",
-  "version": "0.6.12",
+  "version": "1.0.0",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
