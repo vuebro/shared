@@ -5,7 +5,6 @@ import useFlatJsonTree from "@vuebro/flat-json-tree";
 import AJV from "ajv";
 import addFormats from "ajv-formats";
 import dynamicDefaults from "ajv-keywords/dist/definitions/dynamicDefaults.js";
-import { v4 } from "uuid";
 import { reactive, watch } from "vue";
 
 import Credentials from "./types/credentials";
@@ -45,7 +44,7 @@ type TPage = FromSchema<typeof Page> & {
   title?: string;
   to?: string;
 };
-dynamicDefaults.DEFAULTS.uuid = () => () => v4();
+dynamicDefaults.DEFAULTS.uuid = () => () => Date.now().toString(36);
 const ajv = new AJV({
   code: { esm: true },
   coerceTypes: true,
