@@ -45,8 +45,8 @@ type TPage = FromSchema<typeof Page> & {
   to?: string;
 };
 
-const getId = () => Math.random().toString(36).slice(2);
-dynamicDefaults.DEFAULTS.uuid = () => getId;
+const uid = () => Math.random().toString(36).slice(2);
+dynamicDefaults.DEFAULTS.uuid = () => uid;
 const ajv = new AJV({
   code: { esm: true },
   coerceTypes: true,
@@ -168,13 +168,13 @@ export {
   down,
   feed,
   getFontsObjectFromArray,
-  getId,
   importmap,
   left,
   nodes,
   pages,
   remove,
   right,
+  uid,
   up,
   validateCredentials,
 };
