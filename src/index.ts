@@ -47,7 +47,7 @@ type TPage = FromSchema<typeof Page> & {
 
 const uid = () => {
   const url = URL.createObjectURL(new Blob()),
-    id = url.split("/").pop();
+    id = url.split("/").pop() ?? crypto.randomUUID();
   URL.revokeObjectURL(url);
   return id;
 };
