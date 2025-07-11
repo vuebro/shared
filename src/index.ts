@@ -45,7 +45,12 @@ type TPage = FromSchema<typeof Page> & {
   to?: string;
 };
 
-const uid = () => Math.random().toString(36).slice(2);
+const uid = () => {
+  const url = URL.createObjectURL(new Blob()),
+    id = url.split("/").pop();
+  URL.revokeObjectURL(url);
+  return id;
+};
 dynamicDefaults.DEFAULTS.uuid = () => uid;
 const ajv = new AJV({
   code: { esm: true },
