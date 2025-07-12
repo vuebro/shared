@@ -34,7 +34,7 @@ export default {
     flat: { default: true, type: "boolean" },
     header: { type: "string" },
     icon: { type: "string" },
-    id: { type: "string" },
+    id: { format: "uuid", type: "string" },
     images: {
       default: [],
       items: {
