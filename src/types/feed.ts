@@ -41,7 +41,7 @@ export default {
     },
   },
   description: "JSON Feed Version 1.1",
-  dynamicDefaults: { id: "uuid" },
+  dynamicDefaults: { date_published: "datetime", id: "uuid" },
   patternProperties: {
     "^_[a-zA-Z][^.]*$": {
       $ref: "#/definitions/extension",
@@ -133,6 +133,7 @@ export default {
               "Lists related resources. Podcasts, for instance, would include an attachment that’s an audio or video file.",
             items: {
               additionalProperties: false,
+              default: [],
               patternProperties: {
                 "^_[a-zA-Z][^.]*$": {
                   $ref: "#/definitions/extension",
@@ -145,6 +146,7 @@ export default {
                   type: "number",
                 },
                 mime_type: {
+                  default: "",
                   description:
                     "The type of the attachment, such as “audio/mpeg.”",
                   type: "string",
@@ -159,6 +161,7 @@ export default {
                   type: "string",
                 },
                 url: {
+                  default: "",
                   description: "The location of the attachment.",
                   format: "uri",
                   type: "string",
@@ -185,10 +188,12 @@ export default {
             type: "string",
           },
           content_html: {
+            default: "",
             description: "The HTML of the item.",
             type: "string",
           },
           content_text: {
+            default: "",
             description: "The plain text of the item.",
             type: "string",
           },
@@ -238,11 +243,13 @@ export default {
             type: "array",
           },
           title: {
+            default: "",
             description:
               "Plain text. Microblog items in particular may omit titles.",
             type: "string",
           },
           url: {
+            default: "",
             description:
               "The URL of the resource described by the item. It’s the permalink. This may be the same as the id.",
             format: "uri",
