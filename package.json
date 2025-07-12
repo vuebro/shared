@@ -9,7 +9,7 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@vuebro/flat-json-tree": "^1.0.7",
+    "@vuebro/flat-json-tree": "^1.0.8",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "ajv-keywords": "^5.1.0",
