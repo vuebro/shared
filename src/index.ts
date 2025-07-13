@@ -3,7 +3,6 @@ import type { ComputedRef } from "vue";
 
 import useFlatJsonTree from "@vuebro/flat-json-tree";
 import AJV from "ajv";
-import addFormats from "ajv-formats";
 import dynamicDefaults from "ajv-keywords/dist/definitions/dynamicDefaults.js";
 import { reactive, watch } from "vue";
 
@@ -52,15 +51,6 @@ const uid = () => {
   return id;
 };
 dynamicDefaults.DEFAULTS.uuid = () => uid;
-const ajv = new AJV({
-  code: { esm: true },
-  coerceTypes: true,
-  keywords: [dynamicDefaults()],
-  removeAdditional: true,
-  schemas: [Credentials, Data, Page, Importmap, Feed],
-  useDefaults: true,
-});
-addFormats(ajv);
 const $children = {
     get(this: TPage) {
       return this.children.filter(({ enabled }) => enabled);
@@ -86,6 +76,14 @@ const $children = {
       return this.siblings.filter(({ enabled }) => enabled);
     },
   },
+  ajv = new AJV({
+    code: { esm: true },
+    coerceTypes: true,
+    keywords: [dynamicDefaults()],
+    removeAdditional: true,
+    schemas: [Credentials, Data, Page, Importmap, Feed],
+    useDefaults: true,
+  }),
   consoleError = (error: unknown) => {
     window.console.error(error);
   },
@@ -142,8 +140,8 @@ const $children = {
 watch(feed, async (value) => {
   await validateFeed?.(value);
   value.items.forEach((item) => {
-    if (!item.attachments?.length)
-      item.attachments?.push({
+    if (!item.attachments.length)
+      item.attachments.push({
         mime_type: "",
         url: "",
       });
