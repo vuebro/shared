@@ -139,13 +139,6 @@ const $children = {
   } = useFlatJsonTree(nodes) as unknown as IFlatJsonTree;
 watch(feed, async (value) => {
   await validateFeed?.(value);
-  value.items.forEach((item) => {
-    if (!item.attachments.length)
-      item.attachments.push({
-        mime_type: "",
-        url: "",
-      });
-  });
 });
 watch(importmap, async (value) => {
   await validateImportmap?.(value);
