@@ -82,6 +82,5 @@ export default {
       type: "string",
     },
   },
-  required: ["id"],
   type: "object",
 } as const;
