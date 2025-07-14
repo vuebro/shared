@@ -24,7 +24,6 @@ export default {
                   type: "string",
                 },
               },
-              required: ["url", "mime_type"],
               type: "object",
             },
             type: "array",
@@ -41,7 +40,6 @@ export default {
           },
           url: { type: "string" },
         },
-        required: ["id", "title", "content_html"],
         type: "object",
       },
       type: "array",
@@ -59,6 +57,5 @@ export default {
       type: "string",
     },
   },
-  required: ["version", "title", "items"],
   type: "object",
 } as const;
