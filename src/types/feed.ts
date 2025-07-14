@@ -39,10 +39,7 @@ export default {
             default: "",
             type: "string",
           },
-          url: {
-            default: "",
-            type: "string",
-          },
+          url: { type: "string" },
         },
         required: ["id", "title", "content_html"],
         type: "object",
