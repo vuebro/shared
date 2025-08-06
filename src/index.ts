@@ -4,7 +4,7 @@ import type { ComputedRef } from "vue";
 import useFlatJsonTree from "@vuebro/flat-json-tree";
 import AJV from "ajv";
 import dynamicDefaults from "ajv-keywords/dist/definitions/dynamicDefaults.js";
-import { computed, reactive, watch } from "vue";
+import { reactive, watch } from "vue";
 
 import Credentials from "./types/credentials";
 import Data from "./types/data";
@@ -92,11 +92,10 @@ const $children = {
   customFetch = async (url: string) => (await fetch(url)).text(),
   feed = reactive({} as TFeed),
   fonts = reactive([] as TFonts),
-  fontsObject = computed(() =>
+  getFontsObjectFromArray = (fonts: TFonts) =>
     Object.fromEntries(
       fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
     ),
-  ),
   i = {
     get(this: TPage) {
       return this.icon && `i-${this.icon}`;
@@ -179,7 +178,7 @@ export {
   down,
   feed,
   fonts,
-  fontsObject,
+  getFontsObjectFromArray,
   importmap,
   left,
   nodes,
