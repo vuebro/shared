@@ -9,6 +9,7 @@ import { reactive, watch } from "vue";
 import Credentials from "./types/credentials";
 import Data from "./types/data";
 import Feed from "./types/feed";
+import Fonts from "./types/fonts";
 import Importmap from "./types/importmap";
 import Page from "./types/page";
 
@@ -24,6 +25,7 @@ interface IFlatJsonTree {
 }
 type TCredentials = FromSchema<typeof Credentials>;
 type TFeed = FromSchema<typeof Feed>;
+type TFonts = FromSchema<typeof Fonts>;
 type TImportmap = FromSchema<typeof Importmap>;
 type TPage = FromSchema<typeof Page> & {
   $children: TPage[];
@@ -81,7 +83,7 @@ const $children = {
     coerceTypes: true,
     keywords: [dynamicDefaults()],
     removeAdditional: true,
-    schemas: [Credentials, Data, Page, Importmap, Feed],
+    schemas: [Credentials, Data, Page, Importmap, Feed, Fonts],
     useDefaults: true,
   }),
   consoleError = (error: unknown) => {
@@ -89,7 +91,8 @@ const $children = {
   },
   customFetch = async (url: string) => (await fetch(url)).text(),
   feed = reactive({} as TFeed),
-  getFontsObjectFromArray = (fonts: string[]) =>
+  fonts = reactive([] as TFonts),
+  getFontsObjectFromArray = () =>
     Object.fromEntries(
       fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
     ),
@@ -126,6 +129,7 @@ const $children = {
   validateCredentials = ajv.getSchema("urn:jsonschema:credentials"),
   validateData = ajv.getSchema("urn:jsonschema:data"),
   validateFeed = ajv.getSchema("urn:jsonschema:feed"),
+  validateFonts = ajv.getSchema("urn:jsonschema:fonts"),
   validateImportmap = ajv.getSchema("urn:jsonschema:importmap"),
   {
     add,
@@ -139,6 +143,9 @@ const $children = {
   } = useFlatJsonTree(nodes) as unknown as IFlatJsonTree;
 watch(feed, async (value) => {
   await validateFeed?.(value);
+});
+watch(fonts, async (value) => {
+  await validateFonts?.(value);
 });
 watch(importmap, async (value) => {
   await validateImportmap?.(value);
@@ -162,7 +169,7 @@ watch(pages, async (value) => {
       });
     });
 });
-export type { TCredentials, TFeed, TImportmap, TPage };
+export type { TCredentials, TFeed, TFonts, TImportmap, TPage };
 export {
   add,
   atlas,
@@ -170,6 +177,7 @@ export {
   customFetch,
   down,
   feed,
+  fonts,
   getFontsObjectFromArray,
   importmap,
   left,
