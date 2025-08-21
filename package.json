@@ -9,11 +9,11 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@vuebro/flat-json-tree": "^1.0.12",
+    "@vuebro/flat-json-tree": "^1.0.13",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "json-schema-to-ts": "^3.1.1",
-    "vue": "^3.5.18"
+    "vue": "^3.5.19"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
