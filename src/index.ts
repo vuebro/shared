@@ -141,34 +141,50 @@ const $children = {
     right,
     up,
   } = useFlatJsonTree(nodes) as unknown as IFlatJsonTree;
-watch(feed, async (value) => {
-  await validateFeed?.(value);
-});
-watch(fonts, async (value) => {
-  await validateFonts?.(value);
-});
-watch(importmap, async (value) => {
-  await validateImportmap?.(value);
-});
-watch(pages, async (value) => {
-  if (!(await validateData?.(value))) {
-    nodes.length = 0;
-    nodes.push({} as TPage);
-  } else
-    value.forEach((element) => {
-      Object.defineProperties(element, {
-        $children,
-        $index,
-        $next,
-        $prev,
-        $siblings,
-        i,
-        path,
-        title,
-        to,
+watch(
+  feed,
+  async (value) => {
+    await validateFeed?.(value);
+  },
+  { immediate: true },
+);
+watch(
+  fonts,
+  async (value) => {
+    await validateFonts?.(value);
+  },
+  { immediate: true },
+);
+watch(
+  importmap,
+  async (value) => {
+    await validateImportmap?.(value);
+  },
+  { immediate: true },
+);
+watch(
+  pages,
+  async (value) => {
+    if (!(await validateData?.(value))) {
+      nodes.length = 0;
+      nodes.push({} as TPage);
+    } else
+      value.forEach((element) => {
+        Object.defineProperties(element, {
+          $children,
+          $index,
+          $next,
+          $prev,
+          $siblings,
+          i,
+          path,
+          title,
+          to,
+        });
       });
-    });
-});
+  },
+  { immediate: true },
+);
 export type { TCredentials, TFeed, TFonts, TImportmap, TPage };
 export {
   add,
