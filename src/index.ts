@@ -46,12 +46,13 @@ type TPage = FromSchema<typeof Page> & {
   to?: string;
 };
 
-const uid = () => {
-  const url = URL.createObjectURL(new Blob()),
-    id = url.split("/").pop() ?? crypto.randomUUID();
-  URL.revokeObjectURL(url);
-  return id;
-};
+const immediate = true,
+  uid = () => {
+    const url = URL.createObjectURL(new Blob()),
+      id = url.split("/").pop() ?? crypto.randomUUID();
+    URL.revokeObjectURL(url);
+    return id;
+  };
 dynamicDefaults.DEFAULTS.uuid = () => uid;
 const $children = {
     get(this: TPage) {
@@ -146,21 +147,21 @@ watch(
   async (value) => {
     await validateFeed?.(value);
   },
-  { immediate: true },
+  { immediate },
 );
 watch(
   fonts,
   async (value) => {
     await validateFonts?.(value);
   },
-  { immediate: true },
+  { immediate },
 );
 watch(
   importmap,
   async (value) => {
     await validateImportmap?.(value);
   },
-  { immediate: true },
+  { immediate },
 );
 watch(
   pages,
@@ -183,7 +184,7 @@ watch(
         });
       });
   },
-  { immediate: true },
+  { immediate },
 );
 export type { TCredentials, TFeed, TFonts, TImportmap, TPage };
 export {
