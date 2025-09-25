@@ -11,6 +11,7 @@ import Data from "./types/data";
 import Feed from "./types/feed";
 import Fonts from "./types/fonts";
 import Importmap from "./types/importmap";
+import Logs from "./types/logs";
 import Page from "./types/page";
 
 interface IFlatJsonTree {
@@ -27,6 +28,7 @@ type TCredentials = FromSchema<typeof Credentials>;
 type TFeed = FromSchema<typeof Feed>;
 type TFonts = FromSchema<typeof Fonts>;
 type TImportmap = FromSchema<typeof Importmap>;
+type TLogs = FromSchema<typeof Logs>;
 type TPage = FromSchema<typeof Page> & {
   $children: TPage[];
   $index: number;
@@ -84,7 +86,7 @@ const $children = {
     coerceTypes: true,
     keywords: [dynamicDefaults()],
     removeAdditional: true,
-    schemas: [Credentials, Data, Page, Importmap, Feed, Fonts],
+    schemas: [Credentials, Data, Page, Importmap, Feed, Fonts, Logs],
     useDefaults: true,
   }),
   consoleError = (error: unknown) => {
@@ -132,6 +134,7 @@ const $children = {
   validateFeed = ajv.getSchema("urn:jsonschema:feed"),
   validateFonts = ajv.getSchema("urn:jsonschema:fonts"),
   validateImportmap = ajv.getSchema("urn:jsonschema:importmap"),
+  validateLogs = ajv.getSchema("urn:jsonschema:logs"),
   {
     add,
     down,
@@ -186,7 +189,7 @@ watch(
   },
   { immediate },
 );
-export type { TCredentials, TFeed, TFonts, TImportmap, TPage };
+export type { TCredentials, TFeed, TFonts, TImportmap, TLogs, TPage };
 export {
   add,
   atlas,
@@ -205,4 +208,5 @@ export {
   uid,
   up,
   validateCredentials,
+  validateLogs,
 };
