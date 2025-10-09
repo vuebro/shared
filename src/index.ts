@@ -89,9 +89,6 @@ const $children = {
     schemas: [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
     useDefaults: true,
   }),
-  consoleError = (error: unknown) => {
-    window.console.error(error);
-  },
   customFetch = async (url: string) => (await fetch(url)).text(),
   feed = reactive({} as TFeed),
   fonts = reactive([] as TFonts),
@@ -193,7 +190,6 @@ export type { TCredentials, TFeed, TFonts, TImportmap, TLog, TPage };
 export {
   add,
   atlas,
-  consoleError,
   customFetch,
   down,
   feed,
