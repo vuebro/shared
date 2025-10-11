@@ -1,3 +1,4 @@
+import type { unObject } from "@vuebro/flat-json-tree";
 import type { FromSchema } from "json-schema-to-ts";
 import type { ComputedRef } from "vue";
 
@@ -17,9 +18,9 @@ import Page from "./types/page";
 interface IFlatJsonTree {
   add: (pId: string) => string | undefined;
   down: (pId: string) => void;
-  leaves: ComputedRef<TPage[]>;
   left: (pId: string) => string | undefined;
-  objLeaves: Record<string, TPage>;
+  nodes: ComputedRef<TPage[]>;
+  nodesMap: ComputedRef<Record<string, TPage>>;
   remove: (pId: string) => string | undefined;
   right: (pId: string) => string | undefined;
   up: (pId: string) => void;
@@ -135,13 +136,14 @@ const $children = {
   {
     add,
     down,
-    leaves: pages,
     left,
-    objLeaves: atlas,
+    nodes: pages,
+    nodesMap: atlas,
     remove,
     right,
     up,
   } = useFlatJsonTree(nodes) as unknown as IFlatJsonTree;
+
 watch(
   feed,
   async (value) => {
@@ -163,9 +165,11 @@ watch(
   },
   { immediate },
 );
+
 watch(
   pages,
   async (value) => {
+    console.log(value);
     if (!(await validateData?.(value))) {
       nodes.length = 0;
       nodes.push({} as TPage);
@@ -186,7 +190,8 @@ watch(
   },
   { immediate },
 );
-export type { TCredentials, TFeed, TFonts, TImportmap, TLog, TPage };
+
+export type { TCredentials, TFeed, TFonts, TImportmap, TLog, TPage, unObject };
 export {
   add,
   atlas,
