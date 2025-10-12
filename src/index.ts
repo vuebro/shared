@@ -1,4 +1,3 @@
-import type { unObject } from "@vuebro/flat-json-tree";
 import type { FromSchema } from "json-schema-to-ts";
 import type { ComputedRef } from "vue";
 
@@ -169,7 +168,6 @@ watch(
 watch(
   pages,
   async (value) => {
-    console.log(value);
     if (!(await validateData?.(value))) {
       nodes.length = 0;
       nodes.push({} as TPage);
@@ -191,7 +189,7 @@ watch(
   { immediate },
 );
 
-export type { TCredentials, TFeed, TFonts, TImportmap, TLog, TPage, unObject };
+export type { TCredentials, TFeed, TFonts, TImportmap, TLog, TPage };
 export {
   add,
   atlas,
