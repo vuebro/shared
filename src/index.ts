@@ -16,6 +16,7 @@ import Page from "./types/page";
 
 interface IFlatJsonTree {
   add: (pId: string) => string | undefined;
+  addChild: (pId: string) => string | undefined;
   down: (pId: string) => void;
   left: (pId: string) => string | undefined;
   nodes: ComputedRef<TPage[]>;
@@ -134,6 +135,7 @@ const $children = {
   validateLog = ajv.getSchema("urn:jsonschema:log"),
   {
     add,
+    addChild,
     down,
     left,
     nodes: pages,
@@ -192,6 +194,7 @@ watch(
 export type { TCredentials, TFeed, TFonts, TImportmap, TLog, TPage };
 export {
   add,
+  addChild,
   atlas,
   customFetch,
   down,
