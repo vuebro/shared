@@ -56,7 +56,7 @@ const immediate = true,
     URL.revokeObjectURL(url);
     return id;
   };
-dynamicDefaults.DEFAULTS.uuid = () => uid;
+dynamicDefaults.DEFAULTS["uuid"] = () => uid;
 const $children = {
     get(this: TPage) {
       return this.children.filter(({ enabled }) => enabled);
