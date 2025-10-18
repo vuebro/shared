@@ -1,4 +1,9 @@
 import type { JSONSchema } from "json-schema-to-ts";
+
+/* -------------------------------------------------------------------------- */
+/*                        Схема данных для AWS-клиента                        */
+/* -------------------------------------------------------------------------- */
+
 export default {
   $id: "urn:jsonschema:credentials",
   additionalProperties: {
