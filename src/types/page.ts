@@ -1,3 +1,7 @@
+/* -------------------------------------------------------------------------- */
+/*                Схема данных для объекта аттрибутов страницы                */
+/* -------------------------------------------------------------------------- */
+
 export default {
   $id: "urn:jsonschema:page",
   additionalProperties: false,
@@ -38,6 +42,7 @@ export default {
     images: {
       default: [],
       items: {
+        additionalProperties: false,
         properties: {
           alt: { type: "string" },
           url: { default: "", type: "string" },
