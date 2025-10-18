@@ -1,5 +1,9 @@
 import type { JSONSchema } from "json-schema-to-ts";
 
+/* -------------------------------------------------------------------------- */
+/*                   Схема данных для файла index.importmap                   */
+/* -------------------------------------------------------------------------- */
+
 export default {
   $id: "urn:jsonschema:importmap",
   additionalProperties: false,
@@ -7,7 +11,6 @@ export default {
     imports: {
       additionalProperties: { type: "string" },
       default: {},
-      description: "The Imports field",
       type: "object",
     },
     scopes: {
@@ -17,10 +20,8 @@ export default {
         },
         type: "object",
       },
-      description: "The Scopes field",
       type: "object",
     },
   },
-  title: "JSON schema for Import Maps files",
   type: "object",
 } as const satisfies JSONSchema;
