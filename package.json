@@ -26,7 +26,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@vuebro/flat-json-tree": "^2.1.6",
+    "@vuebro/flat-json-tree": "^2.1.7",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "json-schema-to-ts": "^3.1.1",
