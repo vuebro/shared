@@ -14,6 +14,10 @@ import Importmap from "./types/importmap";
 import Log from "./types/log";
 import Page from "./types/page";
 
+/* -------------------------------------------------------------------------- */
+/*                              Объявления типов                              */
+/* -------------------------------------------------------------------------- */
+
 interface IFlatJsonTree {
   add: (pId: string) => string | undefined;
   addChild: (pId: string) => string | undefined;
@@ -49,40 +53,33 @@ type TPage = FromSchema<typeof Page> & {
   to?: string;
 };
 
-const immediate = true,
+/* -------------------------------------------------------------------------- */
+/*                            Значения по умолчанию                           */
+/* -------------------------------------------------------------------------- */
+
+const immediate = true;
+
+/* -------------------------------------------------------------------------- */
+/*                              Служебные функции                             */
+/* -------------------------------------------------------------------------- */
+
+const getFontsObjectFromArray = (fonts: TFonts) =>
+    Object.fromEntries(
+      fonts.map((value) => [value.toLowerCase().replace(/ /g, "_"), value]),
+    ),
   uid = () => {
     const url = URL.createObjectURL(new Blob()),
       id = url.split("/").pop() ?? crypto.randomUUID();
     URL.revokeObjectURL(url);
     return id;
   };
+
+/* -------------------------------------------------------------------------- */
+/*                               Проверки типов                               */
+/* -------------------------------------------------------------------------- */
+
 dynamicDefaults.DEFAULTS["uuid"] = () => uid;
-const $children = {
-    get(this: TPage) {
-      return this.children.filter(({ enabled }) => enabled);
-    },
-  },
-  $index = {
-    get(this: TPage) {
-      return this.$siblings.findIndex(({ id }) => this.id === id);
-    },
-  },
-  $next = {
-    get(this: TPage) {
-      return this.$siblings[this.$index + 1];
-    },
-  },
-  $prev = {
-    get(this: TPage) {
-      return this.$siblings[this.$index - 1];
-    },
-  },
-  $siblings = {
-    get(this: TPage) {
-      return this.siblings.filter(({ enabled }) => enabled);
-    },
-  },
-  ajv = new AJV({
+const ajv = new AJV({
     code: { esm: true },
     coerceTypes: true,
     keywords: [dynamicDefaults()],
@@ -90,21 +87,49 @@ const $children = {
     schemas: [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
     useDefaults: true,
   }),
-  customFetch = async (url: string) => (await fetch(url)).text(),
-  feed = reactive({} as TFeed),
-  fonts = reactive([] as TFonts),
-  getFontsObjectFromArray = (fonts: TFonts) =>
-    Object.fromEntries(
-      fonts.map((value) => [value.toLowerCase().replaceAll(" ", "_"), value]),
-    ),
-  i = {
+  validateCredentials = ajv.getSchema("urn:jsonschema:credentials"),
+  validateData = ajv.getSchema("urn:jsonschema:data"),
+  validateFeed = ajv.getSchema("urn:jsonschema:feed"),
+  validateFonts = ajv.getSchema("urn:jsonschema:fonts"),
+  validateImportmap = ajv.getSchema("urn:jsonschema:importmap"),
+  validateLog = ajv.getSchema("urn:jsonschema:log");
+
+/* -------------------------------------------------------------------------- */
+/*                Дополнительные расчетные аттрибуты для дерева               */
+/* -------------------------------------------------------------------------- */
+
+const properties: PropertyDescriptorMap = {
+  $children: {
+    get(this: TPage) {
+      return this.children.filter(({ enabled }) => enabled);
+    },
+  },
+  $index: {
+    get(this: TPage) {
+      return this.$siblings.findIndex(({ id }) => this.id === id);
+    },
+  },
+  $next: {
+    get(this: TPage) {
+      return this.$siblings[this.$index + 1];
+    },
+  },
+  $prev: {
+    get(this: TPage) {
+      return this.$siblings[this.$index - 1];
+    },
+  },
+  $siblings: {
+    get(this: TPage) {
+      return this.siblings.filter(({ enabled }) => enabled);
+    },
+  },
+  i: {
     get(this: TPage) {
       return this.icon && `i-${this.icon}`;
     },
   },
-  importmap = reactive({} as TImportmap),
-  nodes = reactive([] as TPage[]),
-  path = {
+  path: {
     get(this: TPage) {
       const branch = this.branch.slice(1);
       return branch.some(({ name }) => !name)
@@ -112,38 +137,51 @@ const $children = {
         : branch
             .map(({ name }) => name)
             .join("/")
-            .replaceAll(" ", "_");
+            .replace(/ /g, "_");
     },
   },
-  title = {
+  title: {
     get(this: TPage) {
       return ["", undefined].includes(this.header)
         ? (this.name ?? "")
         : this.header;
     },
   },
-  to = {
+  to: {
     get(this: TPage) {
       return this.path?.replace(/^\/?/, "/").replace(/\/?$/, "/");
     },
   },
-  validateCredentials = ajv.getSchema("urn:jsonschema:credentials"),
-  validateData = ajv.getSchema("urn:jsonschema:data"),
-  validateFeed = ajv.getSchema("urn:jsonschema:feed"),
-  validateFonts = ajv.getSchema("urn:jsonschema:fonts"),
-  validateImportmap = ajv.getSchema("urn:jsonschema:importmap"),
-  validateLog = ajv.getSchema("urn:jsonschema:log"),
-  {
-    add,
-    addChild,
-    down,
-    left,
-    nodes: pages,
-    nodesMap: atlas,
-    remove,
-    right,
-    up,
-  } = useFlatJsonTree(nodes) as unknown as IFlatJsonTree;
+};
+
+/* -------------------------------------------------------------------------- */
+/*                              Основные реактивы                             */
+/* -------------------------------------------------------------------------- */
+
+const feed = reactive({} as TFeed),
+  fonts = reactive([] as TFonts),
+  importmap = reactive({} as TImportmap),
+  nodes = reactive([] as TPage[]);
+
+/* -------------------------------------------------------------------------- */
+/*                    Получение аттрибутов плоского дерева                    */
+/* -------------------------------------------------------------------------- */
+
+const {
+  add,
+  addChild,
+  down,
+  left,
+  nodes: pages,
+  nodesMap: atlas,
+  remove,
+  right,
+  up,
+} = useFlatJsonTree(nodes) as IFlatJsonTree;
+
+/* -------------------------------------------------------------------------- */
+/*                       Проверки консистентности данных                      */
+/* -------------------------------------------------------------------------- */
 
 watch(
   feed,
@@ -152,6 +190,7 @@ watch(
   },
   { immediate },
 );
+
 watch(
   fonts,
   async (value) => {
@@ -159,6 +198,7 @@ watch(
   },
   { immediate },
 );
+
 watch(
   importmap,
   async (value) => {
@@ -175,28 +215,23 @@ watch(
       nodes.push({} as TPage);
     } else
       value.forEach((element) => {
-        Object.defineProperties(element, {
-          $children,
-          $index,
-          $next,
-          $prev,
-          $siblings,
-          i,
-          path,
-          title,
-          to,
-        });
+        if (Object.keys(properties).some((key) => !(key in element)))
+          Object.defineProperties(element, properties);
       });
   },
   { immediate },
 );
 
+/* -------------------------------------------------------------------------- */
+/*                              Экспортный раздел                             */
+/* -------------------------------------------------------------------------- */
+
 export type { TCredentials, TFeed, TFonts, TImportmap, TLog, TPage };
+
 export {
   add,
   addChild,
   atlas,
-  customFetch,
   down,
   feed,
   fonts,
