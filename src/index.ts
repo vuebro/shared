@@ -1,3 +1,4 @@
+import type { AnyValidateFunction } from "ajv/dist/core";
 import type { FromSchema } from "json-schema-to-ts";
 import type { ComputedRef } from "vue";
 
@@ -79,20 +80,20 @@ const getFontsObjectFromArray = (fonts: TFonts) =>
 /* -------------------------------------------------------------------------- */
 
 dynamicDefaults.DEFAULTS["uuid"] = () => uid;
-const ajv = new AJV({
+const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
+  ajv = new AJV({
     code: { esm: true },
     coerceTypes: true,
     keywords: [dynamicDefaults()],
     removeAdditional: true,
-    schemas: [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
+    schemas,
     useDefaults: true,
   }),
-  validateCredentials = ajv.getSchema("urn:jsonschema:credentials"),
-  validateData = ajv.getSchema("urn:jsonschema:data"),
-  validateFeed = ajv.getSchema("urn:jsonschema:feed"),
-  validateFonts = ajv.getSchema("urn:jsonschema:fonts"),
-  validateImportmap = ajv.getSchema("urn:jsonschema:importmap"),
-  validateLog = ajv.getSchema("urn:jsonschema:log");
+  validate: Record<string, AnyValidateFunction> = Object.fromEntries(
+    schemas.map(({ $id }) => [$id.split(":").pop(), ajv.getSchema($id)]),
+  ),
+  validateCredentials = validate["credentials"],
+  validateLog = validate["log"];
 
 /* -------------------------------------------------------------------------- */
 /*                Дополнительные расчетные аттрибуты для дерева               */
@@ -186,7 +187,7 @@ const {
 watch(
   feed,
   async (value) => {
-    await validateFeed?.(value);
+    await validate["feed"]?.(value);
   },
   { immediate },
 );
@@ -194,7 +195,7 @@ watch(
 watch(
   fonts,
   async (value) => {
-    await validateFonts?.(value);
+    await validate["fonts"]?.(value);
   },
   { immediate },
 );
@@ -202,7 +203,7 @@ watch(
 watch(
   importmap,
   async (value) => {
-    await validateImportmap?.(value);
+    await validate["importmap"]?.(value);
   },
   { immediate },
 );
@@ -210,7 +211,7 @@ watch(
 watch(
   pages,
   async (value) => {
-    if (!(await validateData?.(value))) {
+    if (!(await validate["data"]?.(value))) {
       nodes.length = 0;
       nodes.push({} as TPage);
     } else
