@@ -1,75 +1,69 @@
-# Qwen Code Context for @vuebro/shared
+# @vuebro/shared Project Context
 
 ## Project Overview
 
-This is a shared library providing common utilities, reactive data structures, and validation schemas for Vue-based applications, particularly those built with the VueBro ecosystem. It's a TypeScript library that exports reactive data structures with Vue 3 compatibility and JSON Schema-based validation using AJV.
+**@vuebro/shared** is a shared TypeScript library providing common utilities, reactive data structures, and validation schemas for Vue-based applications, particularly those built with the VueBro ecosystem. The library offers reactive data management with automatic validation using JSON Schema and AJV, tree data structures with navigation utilities, and common data types for various Vue application components.
 
 ## Key Features
 
-- **Reactive Data Management**: Uses Vue's reactivity system to manage shared data structures
+- **Reactive Data Management**: Uses Vue 3's reactivity system to manage shared data structures
 - **JSON Schema Validation**: Validates data against predefined schemas using AJV
-- **Tree Data Structure**: Provides utilities for working with hierarchical data through the `@vuebro/flat-json-tree` dependency
+- **Tree Data Structure**: Provides utilities for working with hierarchical data
 - **Type Safety**: Strong typing with TypeScript and JSON Schema integration
 - **Vue 3 Compatibility**: Built specifically for Vue 3's Composition API
+
+## Architecture & Components
+
+### Core Data Structures
+- `feed`: Reactive object for feed data
+- `fonts`: Reactive array of font names
+- `importmap`: Reactive object for import maps
+- `pages`: Reactive array of pages with tree navigation (uses `@vuebro/flat-json-tree`)
+- `atlas`: Computed map of nodes by ID
+
+### Tree Navigation Functions
+- `add(parentId)`: Add a new node as a child
+- `addChild(parentId)`: Add a child node
+- `remove(nodeId)`: Remove a node
+- `up(nodeId)`: Move node up in the sibling list
+- `down(nodeId)`: Move node down in the sibling list
+- `left(nodeId)`: Move node left in the hierarchy
+- `right(nodeId)`: Move node right in the hierarchy
+
+### Utility Functions
+- `uid()`: Generate a unique identifier
+- `getFontsObjectFromArray(fonts)`: Convert font array to object mapping
+
+### Validators
+- `validateCredentials`: Validate credentials against schema
+- `validateLog`: Validate log entries against schema
 
 ## Project Structure
 
 ```
 src/
-├── index.ts              # Main entry point with reactive data structures
-└── types/                # JSON Schema definitions
-    ├── credentials.ts    # AWS credentials schema
-    ├── data.ts           # Data schema
-    ├── feed.ts           # Feed schema
-    ├── fonts.ts          # Fonts schema
-    ├── importmap.ts      # Import map schema
-    ├── log.ts            # Log schema
-    └── page.ts           # Page schema
+├── index.ts          # Main entry point with reactive data structures
+└── types/            # JSON Schema definitions for data types
+    ├── credentials.ts
+    ├── data.ts
+    ├── feed.ts
+    ├── fonts.ts
+    ├── importmap.ts
+    ├── log.ts
+    └── page.ts
 ```
 
-## Key Dependencies
+## Data Types
 
-- `vue` (^3.5.22) - Vue 3 framework for reactivity
-- `ajv` (^8.17.1) - JSON Schema validator
-- `ajv-keywords` (^5.1.0) - Additional AJV keywords including dynamicDefaults
-- `json-schema-to-ts` (^3.1.1) - Type generation from JSON schemas
-- `@vuebro/flat-json-tree` (^2.1.11) - Tree navigation utilities
+The library exports the following TypeScript types:
+- `TPage`: Page data structure with hierarchical properties
+- `TCredentials`: Credentials data structure
+- `TFeed`: Feed data structure
+- `TFonts`: Fonts data structure
+- `TImportmap`: Import map data structure
+- `TLog`: Log data structure
 
-## Main Exports
-
-### Reactive Data Structures
-- `feed` - Reactive object for feed data
-- `fonts` - Reactive array of font names
-- `importmap` - Reactive object for import maps
-- `pages` - Reactive array of pages with tree navigation
-- `atlas` - Computed map of nodes by ID
-
-### Tree Navigation Functions
-- `add(parentId)` - Add a new node as a child
-- `addChild(parentId)` - Add a child node
-- `remove(nodeId)` - Remove a node
-- `up(nodeId)` - Move node up in the sibling list
-- `down(nodeId)` - Move node down in the sibling list
-- `left(nodeId)` - Move node left in the hierarchy
-- `right(nodeId)` - Move node right in the hierarchy
-
-### Utility Functions
-- `uid()` - Generate a unique identifier
-- `getFontsObjectFromArray(fonts)` - Convert font array to object mapping
-
-### Validators
-- `validateCredentials` - Validate credentials against schema
-- `validateLog` - Validate log entries against schema
-
-### TypeScript Types
-- `TPage` - Page data structure with hierarchical properties
-- `TCredentials` - Credentials data structure
-- `TFeed` - Feed data structure
-- `TFonts` - Fonts data structure
-- `TImportmap` - Import map data structure
-- `TLog` - Log data structure
-
-## Data Structure Enhancements
+## Enhanced Page Properties
 
 Each page in the tree automatically gets enhanced with computed properties:
 - `$children`: Enabled child nodes
@@ -81,31 +75,40 @@ Each page in the tree automatically gets enhanced with computed properties:
 - `title`: Page title (header or name)
 - `to`: Full URL path
 
-## Building and Running
+## Dependencies
 
-### Build Command
-```bash
-npm run build
-```
-This runs `tsc && tsc-alias` to compile TypeScript and resolve path aliases.
+- `@vuebro/flat-json-tree`: Tree data structure management
+- `ajv`: JSON Schema validation
+- `ajv-keywords`: Additional AJV keywords including dynamic defaults
+- `json-schema-to-ts`: Type generation from JSON schemas
+- `vue`: Vue 3 reactivity system
 
-### Linting
-```bash
-npm run lint
-```
-This runs ESLint with the project's shared configuration.
+## Development Commands
 
-### Development Dependencies
-- `@vuebro/configs` - Shared configurations for TypeScript and ESLint
-- `@types/node` - TypeScript definitions for Node.js
+- `npm run build`: Compiles TypeScript and runs tsc-alias
+- `npm run lint`: Runs ESLint on the project
 
-## Development Conventions
+## Build System
 
-1. **Type Safety**: All data structures are defined using JSON schemas that are converted to TypeScript types.
-2. **Validation**: All reactive data structures are validated against their respective schemas using AJV.
-3. **Vue Reactivity**: Uses Vue's reactivity system for managing shared state.
-4. **Auto-generated IDs**: Uses dynamic defaults with a UUID generator for creating unique identifiers.
+- TypeScript configuration extends `@vuebro/configs/tsconfig`
+- Builds to the `dist/` directory
+- Uses ES modules (`type: "module"` in package.json)
 
-## File Purpose
+## Testing & Validation
 
-This QWEN.md file serves as a comprehensive guide to understanding the `@vuebro/shared` library, its functionality, and how to contribute to or use it effectively. The library is designed to provide a consistent foundation for Vue-based applications in the VueBro ecosystem with proper type safety and validation.
+The library implements automatic validation through Vue watchers that validate data structures whenever they change. The validation is performed using AJV against predefined JSON schemas.
+
+## Style & Conventions
+
+- Uses ESLint configuration from `@vuebro/configs/eslint`
+- Follows Vue 3 Composition API patterns
+- TypeScript code with strict typing
+- JSON Schema definitions for data validation
+
+## Key Implementation Details
+
+The library uses `Object.defineProperties` to add computed properties to page objects based on the tree structure. It leverages Vue's reactivity system to automatically validate data structures when they change and enhances page objects with navigation properties at runtime.
+
+## Usage Context
+
+This library is designed for use in Vue-based applications that need shared reactive data structures with automatic validation. It's particularly useful for applications that work with hierarchical page structures, configuration data, or other tree-like data models that require validation.
