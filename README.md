@@ -2,6 +2,18 @@
 
 A shared library providing common utilities, reactive data structures, and validation schemas for Vue-based applications, particularly those built with the VueBro ecosystem.
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Reference](#api-reference)
+- [Data Types](#data-types)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Overview
 
 This library provides a set of shared reactive data structures and validation utilities that are commonly used across Vue applications. It includes:
@@ -43,20 +55,26 @@ import {
   validateCredentials,
   validateLog,
   uid,
-  getFontsObjectFromArray
-} from '@vuebro/shared';
+  getFontsObjectFromArray,
+} from "@vuebro/shared";
 
 // Use reactive data structures
 console.log(pages); // Reactive array of page objects
 
 // Add a new page to the tree structure
-const newPageId = add('parentId');
+const newPageId = add("parentId");
 
 // Validate credentials
 const isValid = validateCredentials(someCredentials);
+
+// Generate unique IDs
+const id = uid();
+
+// Convert fonts array to object mapping
+const fontsObject = getFontsObjectFromArray(["Arial", "Helvetica"]);
 ```
 
-## API
+## API Reference
 
 ### Reactive Data Structures
 
@@ -80,6 +98,7 @@ const isValid = validateCredentials(someCredentials);
 
 - `uid()`: Generate a unique identifier
 - `getFontsObjectFromArray(fonts)`: Convert font array to object mapping
+- `fetchText(url, defaultText)`: Fetch text content from a URL with fallback
 
 ### Validators
 
@@ -97,7 +116,7 @@ The library exports the following TypeScript types:
 - `TImportmap`: Import map data structure
 - `TLog`: Log data structure
 
-## Data Structure Enhancements
+### Page Enhancements
 
 Each page in the tree automatically gets enhanced with computed properties:
 
@@ -110,9 +129,42 @@ Each page in the tree automatically gets enhanced with computed properties:
 - `title`: Page title (header or name)
 - `to`: Full URL path
 
+## Development
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Scripts
+
+```bash
+npm run build  # Compile TypeScript to JavaScript
+npm run lint   # Lint the codebase
+```
+
+### Building from Source
+
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Build the project: `npm run build`
+
+## Contributing
+
+We welcome contributions to this project! Here's how you can help:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Commit your changes (`git commit -m 'Add some amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
+
+Please make sure to update tests as appropriate and follow the existing code style.
+
 ## License
 
-AGPL-3.0-or-later
+This project is licensed under the AGPL-3.0-or-later License - see the [LICENSE](LICENSE) file for details.
 
 ## Author
 

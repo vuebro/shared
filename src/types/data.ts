@@ -5,7 +5,7 @@ import type { JSONSchema } from "json-schema-to-ts";
 /* -------------------------------------------------------------------------- */
 
 export default {
-  $id: "urn:jsonschema:data",
   items: { $ref: "urn:jsonschema:page" },
+  $id: "urn:jsonschema:data",
   type: "array",
 } as const satisfies JSONSchema;

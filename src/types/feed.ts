@@ -3,63 +3,63 @@
 /* -------------------------------------------------------------------------- */
 
 export default {
-  $id: "urn:jsonschema:feed",
-  additionalProperties: false,
   properties: {
-    feed_url: { type: "string" },
-    home_page_url: { type: "string" },
     items: {
-      default: [],
       items: {
-        additionalProperties: false,
-        dynamicDefaults: { date_published: "datetime", id: "uuid" },
         properties: {
           attachments: {
-            default: [],
             items: {
-              additionalProperties: false,
               properties: {
                 mime_type: {
-                  default: "",
                   type: "string",
+                  default: "",
                 },
                 url: {
-                  default: "",
                   type: "string",
+                  default: "",
                 },
               },
+              additionalProperties: false,
               type: "object",
             },
             type: "array",
+            default: [],
           },
           content_html: {
-            default: "",
             type: "string",
+            default: "",
+          },
+          title: {
+            type: "string",
+            default: "",
           },
           date_published: { type: "string" },
-          id: { type: "string" },
-          title: {
-            default: "",
-            type: "string",
-          },
           url: { type: "string" },
+          id: { type: "string" },
         },
+        dynamicDefaults: { date_published: "datetime", id: "uuid" },
+        additionalProperties: false,
         type: "object",
       },
       type: "array",
-    },
-    title: {
-      default: "",
-      type: "string",
+      default: [],
     },
     version: {
-      default: "https://jsonfeed.org/version/1",
       enum: [
         "https://jsonfeed.org/version/1",
         "https://jsonfeed.org/version/1.1",
       ],
+      default: "https://jsonfeed.org/version/1",
       type: "string",
     },
+    title: {
+      type: "string",
+      default: "",
+    },
+    home_page_url: { type: "string" },
+    feed_url: { type: "string" },
   },
+  additionalProperties: false,
+  $id: "urn:jsonschema:feed",
   type: "object",
 } as const;
