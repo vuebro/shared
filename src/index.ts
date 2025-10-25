@@ -6,6 +6,7 @@ import dynamicDefaults from "ajv-keywords/dist/definitions/dynamicDefaults.js";
 import useFlatJsonTree from "@vuebro/flat-json-tree";
 import { consola } from "consola/browser";
 import { reactive, watch } from "vue";
+import uid from "uuid-random";
 import AJV from "ajv";
 
 import Credentials from "./types/credentials";
@@ -65,21 +66,17 @@ const immediate = true;
 /*                              Служебные функции                             */
 /* -------------------------------------------------------------------------- */
 
-const fetchText = async (input: string, text = "") => {
+const fetching = async (input: string, resolver = "text") => {
     try {
       const response = await fetch(input);
-      if (response.ok) return await response.text();
-      else throw new Error(`Response status: ${response.status.toString()}`);
+      if (response.ok) {
+        const method = response[resolver as keyof Response];
+        if (typeof method === "function") return await method();
+        else throw new Error(`Invalid resolver "${resolver}"`);
+      } else throw new Error(`Response status: ${response.status.toString()}`);
     } catch (error) {
       consola.error(error);
-      return text;
     }
-  },
-  uid = () => {
-    const url = URL.createObjectURL(new Blob()),
-      id = url.split("/").pop() ?? crypto.randomUUID();
-    URL.revokeObjectURL(url);
-    return id;
   },
   getFontsObjectFromArray = (fonts: TFonts) =>
     Object.fromEntries(
@@ -245,7 +242,7 @@ export {
   validateCredentials,
   validateLog,
   importmap,
-  fetchText,
+  fetching,
   addChild,
   remove,
   atlas,
@@ -257,6 +254,5 @@ export {
   feed,
   left,
   add,
-  uid,
   up,
 };
