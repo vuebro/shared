@@ -30,14 +30,14 @@
   },
   "prettier": "@vuebro/configs/prettierrc",
   "dependencies": {
-    "@vuebro/flat-json-tree": "^2.1.16",
+    "@vuebro/flat-json-tree": "^2.1.18",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "json-schema-to-ts": "^3.1.1"
   },
   "devDependencies": {
     "@types/node": "^24.9.1",
-    "@vuebro/configs": "^1.1.39",
+    "@vuebro/configs": "^1.1.41",
     "vite-plugin-static-copy": "^3.1.4"
   }
 }
