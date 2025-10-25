@@ -6,6 +6,7 @@ import dynamicDefaults from "ajv-keywords/dist/definitions/dynamicDefaults.js";
 import useFlatJsonTree from "@vuebro/flat-json-tree";
 import { consola } from "consola/browser";
 import { reactive, watch } from "vue";
+import { ofetch } from "ofetch";
 import uid from "uuid-random";
 import AJV from "ajv";
 
@@ -66,22 +67,17 @@ const immediate = true;
 /*                              Служебные функции                             */
 /* -------------------------------------------------------------------------- */
 
-const fetching = async (input: string, resolver = "text") => {
+const getFontsObjectFromArray = (fonts: TFonts) =>
+    Object.fromEntries(
+      fonts.map((value) => [value.toLowerCase().replace(/ /g, "_"), value]),
+    ),
+  fetching = async (input: string) => {
     try {
-      const response = await fetch(input);
-      if (response.ok) {
-        const method = response[resolver as keyof Response];
-        if (typeof method === "function") return await method();
-        else throw new Error(`Invalid resolver "${resolver}"`);
-      } else throw new Error(`Response status: ${response.status.toString()}`);
+      return await ofetch(input);
     } catch (error) {
       consola.error(error);
     }
-  },
-  getFontsObjectFromArray = (fonts: TFonts) =>
-    Object.fromEntries(
-      fonts.map((value) => [value.toLowerCase().replace(/ /g, "_"), value]),
-    );
+  };
 
 /* -------------------------------------------------------------------------- */
 /*                               Проверки типов                               */
