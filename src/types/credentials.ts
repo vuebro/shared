@@ -5,16 +5,16 @@ import type { JSONSchema } from "json-schema-to-ts";
 /* -------------------------------------------------------------------------- */
 
 export default {
+  $id: "urn:jsonschema:credentials",
   additionalProperties: {
     properties: {
-      secretAccessKey: { nullable: true, type: "string", default: null },
-      accessKeyId: { nullable: true, type: "string", default: null },
-      endpoint: { nullable: true, type: "string", default: null },
-      Bucket: { nullable: true, type: "string", default: null },
-      region: { nullable: true, type: "string", default: null },
+      accessKeyId: { default: null, nullable: true, type: "string" },
+      Bucket: { default: null, nullable: true, type: "string" },
+      endpoint: { default: null, nullable: true, type: "string" },
+      region: { default: null, nullable: true, type: "string" },
+      secretAccessKey: { default: null, nullable: true, type: "string" },
     },
     type: "object",
   },
-  $id: "urn:jsonschema:credentials",
   type: "object",
 } as const satisfies JSONSchema;
