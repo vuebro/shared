@@ -47,6 +47,7 @@ type TPage = FromSchema<typeof Page> & {
   branch: TPage[];
   children: TPage[];
   i?: string;
+  id: string;
   index: number;
   next?: TPage;
   parent?: TPage;
