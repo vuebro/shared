@@ -54,6 +54,11 @@ type TPage = FromSchema<typeof Page> & {
   to?: string;
 };
 
+/**
+ * Generates a UUID
+ *
+ * @returns {string} A generated UUID
+ */
 dynamicDefaults.DEFAULTS["uuid"] = () => uid;
 
 const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
@@ -66,6 +71,13 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
     useDefaults: true,
   }),
   feed = reactive({} as TFeed),
+  /**
+   * Fetches text content from a URL
+   *
+   * @param {string} input - The URL to fetch content from
+   * @returns {Promise<unknown>} The fetched content or undefined if an error
+   *   occurs
+   */
   fetching = async (input: string) => {
     try {
       return await ofetch(input);
@@ -74,6 +86,12 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
     }
   },
   fonts = reactive([] as TFonts),
+  /**
+   * Converts fonts array to an object mapping with underscored keys
+   *
+   * @param {TFonts} fonts - The array of font names to convert
+   * @returns {Record<string, string>} An object mapping with underscored keys
+   */
   getFontsObjectFromArray = (fonts: TFonts) =>
     Object.fromEntries(
       fonts.map((value) => [value.toLowerCase().replace(/ /g, "_"), value]),
@@ -83,36 +101,75 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
   nodes = reactive([] as TPage[]),
   properties: PropertyDescriptorMap = {
     $children: {
+      /**
+       * Returns enabled child nodes
+       *
+       * @returns {TPage[]} The enabled child nodes
+       */
       get(this: TPage) {
         return this.children.filter(({ enabled }) => enabled);
       },
     },
     $index: {
+      /**
+       * Returns index among siblings
+       *
+       * @returns {number} The index of this node among its siblings
+       */
       get(this: TPage) {
         return this.$siblings.findIndex(({ id }) => this.id === id);
       },
     },
     $next: {
+      /**
+       * Returns next sibling among enabled nodes
+       *
+       * @returns {TPage | undefined} The next sibling node or undefined if none
+       *   exists
+       */
       get(this: TPage) {
         return this.$siblings[this.$index + 1];
       },
     },
     $prev: {
+      /**
+       * Returns previous sibling among enabled nodes
+       *
+       * @returns {TPage | undefined} The previous sibling node or undefined if
+       *   none exists
+       */
       get(this: TPage) {
         return this.$siblings[this.$index - 1];
       },
     },
     $siblings: {
+      /**
+       * Returns all enabled siblings
+       *
+       * @returns {TPage[]} The enabled sibling nodes
+       */
       get(this: TPage) {
         return this.siblings.filter(({ enabled }) => enabled);
       },
     },
     i: {
+      /**
+       * Returns icon class name
+       *
+       * @returns {string | undefined} The icon class name or undefined if no
+       *   icon is set
+       */
       get(this: TPage) {
         return this.icon && `i-${this.icon}`;
       },
     },
     path: {
+      /**
+       * Returns URL path based on branch
+       *
+       * @returns {string | undefined} The path or undefined if any branch
+       *   segment has no name
+       */
       get(this: TPage) {
         const branch = this.branch.slice(1);
         return branch.some(({ name }) => !name)
@@ -124,6 +181,11 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
       },
     },
     title: {
+      /**
+       * Returns page title (header or name)
+       *
+       * @returns {string} The page title
+       */
       get(this: TPage) {
         return ["", undefined].includes(this.header)
           ? (this.name ?? "")
@@ -131,6 +193,12 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
       },
     },
     to: {
+      /**
+       * Returns full URL path
+       *
+       * @returns {string | undefined} The full URL path or undefined if path is
+       *   not defined
+       */
       get(this: TPage) {
         return this.path?.replace(/^\/?/, "/").replace(/\/?$/, "/");
       },
