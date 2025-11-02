@@ -18,10 +18,6 @@ import Importmap from "./types/importmap";
 import Log from "./types/log";
 import Page from "./types/page";
 
-/* -------------------------------------------------------------------------- */
-/*                              Объявления типов                              */
-/* -------------------------------------------------------------------------- */
-
 interface IFlatJsonTree {
   add: (pId: string) => string | undefined;
   addChild: (pId: string) => string | undefined;
@@ -58,21 +54,8 @@ type TPage = FromSchema<typeof Page> & {
   to?: string;
 };
 
-const immediate = true;
-
-const fetching = async (input: string) => {
-    try {
-      return await ofetch(input);
-    } catch (error) {
-      consola.error(error);
-    }
-  },
-  getFontsObjectFromArray = (fonts: TFonts) =>
-    Object.fromEntries(
-      fonts.map((value) => [value.toLowerCase().replace(/ /g, "_"), value]),
-    );
-
 dynamicDefaults.DEFAULTS["uuid"] = () => uid;
+
 const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
   ajv = new AJV({
     code: { esm: true },
@@ -82,84 +65,93 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
     schemas,
     useDefaults: true,
   }),
+  feed = reactive({} as TFeed),
+  fetching = async (input: string) => {
+    try {
+      return await ofetch(input);
+    } catch (error) {
+      consola.error(error);
+    }
+  },
+  fonts = reactive([] as TFonts),
+  getFontsObjectFromArray = (fonts: TFonts) =>
+    Object.fromEntries(
+      fonts.map((value) => [value.toLowerCase().replace(/ /g, "_"), value]),
+    ),
+  immediate = true,
+  importmap = reactive({} as TImportmap),
+  nodes = reactive([] as TPage[]),
+  properties: PropertyDescriptorMap = {
+    $children: {
+      get(this: TPage) {
+        return this.children.filter(({ enabled }) => enabled);
+      },
+    },
+    $index: {
+      get(this: TPage) {
+        return this.$siblings.findIndex(({ id }) => this.id === id);
+      },
+    },
+    $next: {
+      get(this: TPage) {
+        return this.$siblings[this.$index + 1];
+      },
+    },
+    $prev: {
+      get(this: TPage) {
+        return this.$siblings[this.$index - 1];
+      },
+    },
+    $siblings: {
+      get(this: TPage) {
+        return this.siblings.filter(({ enabled }) => enabled);
+      },
+    },
+    i: {
+      get(this: TPage) {
+        return this.icon && `i-${this.icon}`;
+      },
+    },
+    path: {
+      get(this: TPage) {
+        const branch = this.branch.slice(1);
+        return branch.some(({ name }) => !name)
+          ? undefined
+          : branch
+              .map(({ name }) => name)
+              .join("/")
+              .replace(/ /g, "_");
+      },
+    },
+    title: {
+      get(this: TPage) {
+        return ["", undefined].includes(this.header)
+          ? (this.name ?? "")
+          : this.header;
+      },
+    },
+    to: {
+      get(this: TPage) {
+        return this.path?.replace(/^\/?/, "/").replace(/\/?$/, "/");
+      },
+    },
+  },
   validate: Record<string, AnyValidateFunction> = Object.fromEntries(
     schemas.map(({ $id }) => [$id.split(":").pop(), ajv.getSchema($id)]),
   ),
   validateCredentials = validate["credentials"],
-  validateLog = validate["log"];
-
-const properties: PropertyDescriptorMap = {
-  $children: {
-    get(this: TPage) {
-      return this.children.filter(({ enabled }) => enabled);
-    },
-  },
-  $index: {
-    get(this: TPage) {
-      return this.$siblings.findIndex(({ id }) => this.id === id);
-    },
-  },
-  $next: {
-    get(this: TPage) {
-      return this.$siblings[this.$index + 1];
-    },
-  },
-  $prev: {
-    get(this: TPage) {
-      return this.$siblings[this.$index - 1];
-    },
-  },
-  $siblings: {
-    get(this: TPage) {
-      return this.siblings.filter(({ enabled }) => enabled);
-    },
-  },
-  i: {
-    get(this: TPage) {
-      return this.icon && `i-${this.icon}`;
-    },
-  },
-  path: {
-    get(this: TPage) {
-      const branch = this.branch.slice(1);
-      return branch.some(({ name }) => !name)
-        ? undefined
-        : branch
-            .map(({ name }) => name)
-            .join("/")
-            .replace(/ /g, "_");
-    },
-  },
-  title: {
-    get(this: TPage) {
-      return ["", undefined].includes(this.header)
-        ? (this.name ?? "")
-        : this.header;
-    },
-  },
-  to: {
-    get(this: TPage) {
-      return this.path?.replace(/^\/?/, "/").replace(/\/?$/, "/");
-    },
-  },
-};
-
-const feed = reactive({} as TFeed),
-  fonts = reactive([] as TFonts),
-  importmap = reactive({} as TImportmap),
-  nodes = reactive([] as TPage[]);
-
-const {
-  add,
-  addChild,
-  down,
-  left,
-  nodes: pages,
-  nodesMap: atlas,
-  remove,
-  right,
-  up,
-} = useFlatJsonTree(nodes) as IFlatJsonTree;
+  validateLog = validate["log"],
+  {
+    add,
+    addChild,
+    down,
+    left,
+    nodes: pages,
+    nodesMap: atlas,
+    remove,
+    right,
+    up,
+  } = useFlatJsonTree(nodes) as IFlatJsonTree;
 
 watch(
   feed,
