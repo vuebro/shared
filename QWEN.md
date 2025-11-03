@@ -45,7 +45,7 @@
 
 ## Project Structure
 
-```ts
+```
 src/
 ├── index.ts          # Main entry point with reactive data structures
 └── types/            # JSON Schema definitions for data types
