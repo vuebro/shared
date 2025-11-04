@@ -86,16 +86,6 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
     }
   },
   fonts = reactive([] as TFonts),
-  /**
-   * Converts fonts array to an object mapping with underscored keys
-   *
-   * @param {TFonts} fonts - The array of font names to convert
-   * @returns {Record<string, string>} An object mapping with underscored keys
-   */
-  getFontsObjectFromArray = (fonts: TFonts) =>
-    Object.fromEntries(
-      fonts.map((value) => [value.toLowerCase().replace(/ /g, "_"), value]),
-    ),
   immediate = true,
   importmap = reactive({} as TImportmap),
   nodes = reactive([] as TPage[]),
@@ -270,7 +260,6 @@ export {
   feed,
   fetching,
   fonts,
-  getFontsObjectFromArray,
   importmap,
   left,
   nodes,
