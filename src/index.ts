@@ -57,7 +57,7 @@ type TPage = FromSchema<typeof Page> & {
 /**
  * Generates a UUID
  *
- * @returns {string} A generated UUID
+ * @returns A generated UUID
  */
 dynamicDefaults.DEFAULTS["uuid"] = () => uid;
 
@@ -74,9 +74,8 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
   /**
    * Fetches text content from a URL
    *
-   * @param {string} input - The URL to fetch content from
-   * @returns {Promise<unknown>} The fetched content or undefined if an error
-   *   occurs
+   * @param input - The URL to fetch content from
+   * @returns The fetched content or undefined if an error occurs
    */
   fetching = async (input: string) => {
     try {
@@ -94,7 +93,7 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
       /**
        * Returns enabled child nodes
        *
-       * @returns {TPage[]} The enabled child nodes
+       * @returns The enabled child nodes
        */
       get(this: TPage) {
         return this.children.filter(({ enabled }) => enabled);
@@ -104,7 +103,7 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
       /**
        * Returns index among siblings
        *
-       * @returns {number} The index of this node among its siblings
+       * @returns The index of this node among its siblings
        */
       get(this: TPage) {
         return this.$siblings.findIndex(({ id }) => this.id === id);
@@ -114,8 +113,7 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
       /**
        * Returns next sibling among enabled nodes
        *
-       * @returns {TPage | undefined} The next sibling node or undefined if none
-       *   exists
+       * @returns The next sibling node or undefined if none exists
        */
       get(this: TPage) {
         return this.$siblings[this.$index + 1];
@@ -125,8 +123,7 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
       /**
        * Returns previous sibling among enabled nodes
        *
-       * @returns {TPage | undefined} The previous sibling node or undefined if
-       *   none exists
+       * @returns The previous sibling node or undefined if none exists
        */
       get(this: TPage) {
         return this.$siblings[this.$index - 1];
@@ -136,7 +133,7 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
       /**
        * Returns all enabled siblings
        *
-       * @returns {TPage[]} The enabled sibling nodes
+       * @returns The enabled sibling nodes
        */
       get(this: TPage) {
         return this.siblings.filter(({ enabled }) => enabled);
@@ -146,8 +143,7 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
       /**
        * Returns icon class name
        *
-       * @returns {string | undefined} The icon class name or undefined if no
-       *   icon is set
+       * @returns The icon class name or undefined if no icon is set
        */
       get(this: TPage) {
         return this.icon && `i-${this.icon}`;
@@ -157,8 +153,7 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
       /**
        * Returns URL path based on branch
        *
-       * @returns {string | undefined} The path or undefined if any branch
-       *   segment has no name
+       * @returns The path or undefined if any branch segment has no name
        */
       get(this: TPage) {
         const branch = this.branch.slice(1);
@@ -174,7 +169,7 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
       /**
        * Returns page title (header or name)
        *
-       * @returns {string} The page title
+       * @returns The page title
        */
       get(this: TPage) {
         return ["", undefined].includes(this.header)
@@ -186,8 +181,7 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
       /**
        * Returns full URL path
        *
-       * @returns {string | undefined} The full URL path or undefined if path is
-       *   not defined
+       * @returns The full URL path or undefined if path is not defined
        */
       get(this: TPage) {
         return this.path?.replace(/^\/?/, "/").replace(/\/?$/, "/");
