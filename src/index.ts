@@ -18,23 +18,12 @@ import Importmap from "./types/importmap";
 import Log from "./types/log";
 import Page from "./types/page";
 
-interface IFlatJsonTree {
-  add: (pId: string) => string | undefined;
-  addChild: (pId: string) => string | undefined;
-  down: (pId: string) => void;
-  left: (pId: string) => string | undefined;
-  nodes: ComputedRef<TPage[]>;
-  nodesMap: ComputedRef<Record<string, TPage>>;
-  remove: (pId: string) => string | undefined;
-  right: (pId: string) => string | undefined;
-  up: (pId: string) => void;
-}
-type TCredentials = FromSchema<typeof Credentials>;
-type TFeed = FromSchema<typeof Feed>;
-type TFonts = FromSchema<typeof Fonts>;
-type TImportmap = FromSchema<typeof Importmap>;
-type TLog = FromSchema<typeof Log>;
-type TPage = FromSchema<typeof Page> & {
+export type TCredentials = FromSchema<typeof Credentials>;
+export type TFeed = FromSchema<typeof Feed>;
+export type TFonts = FromSchema<typeof Fonts>;
+export type TImportmap = FromSchema<typeof Importmap>;
+export type TLog = FromSchema<typeof Log>;
+export type TPage = FromSchema<typeof Page> & {
   $children: TPage[];
   $index: number;
   $next?: TPage;
@@ -53,6 +42,17 @@ type TPage = FromSchema<typeof Page> & {
   title?: string;
   to?: string;
 };
+interface IFlatJsonTree {
+  add: (pId: string) => string | undefined;
+  addChild: (pId: string) => string | undefined;
+  down: (pId: string) => void;
+  left: (pId: string) => string | undefined;
+  nodes: ComputedRef<TPage[]>;
+  nodesMap: ComputedRef<Record<string, TPage>>;
+  remove: (pId: string) => string | undefined;
+  right: (pId: string) => string | undefined;
+  up: (pId: string) => void;
+}
 
 /**
  * Generates a UUID
@@ -70,24 +70,7 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
     schemas,
     useDefaults: true,
   }),
-  feed = reactive({} as TFeed),
-  /**
-   * Fetches text content from a URL
-   *
-   * @param input - The URL to fetch content from
-   * @returns The fetched content or undefined if an error occurs
-   */
-  fetching = async (input: string) => {
-    try {
-      return await ofetch(input);
-    } catch (error) {
-      consola.error(error);
-    }
-  },
-  fonts = reactive([] as TFonts),
   immediate = true,
-  importmap = reactive({} as TImportmap),
-  nodes = reactive([] as TPage[]),
   properties: PropertyDescriptorMap = {
     $children: {
       /**
@@ -190,7 +173,25 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
   },
   validate: Record<string, AnyValidateFunction> = Object.fromEntries(
     schemas.map(({ $id }) => [$id.split(":").pop(), ajv.getSchema($id)]),
-  ),
+  );
+
+/**
+ * Fetches text content from a URL
+ *
+ * @param input - The URL to fetch content from
+ * @returns The fetched content or undefined if an error occurs
+ */
+export const feed = reactive({} as TFeed),
+  fetching = async (input: string) => {
+    try {
+      return await ofetch(input);
+    } catch (error) {
+      consola.error(error);
+    }
+  },
+  fonts = reactive([] as TFonts),
+  importmap = reactive({} as TImportmap),
+  nodes = reactive([] as TPage[]),
   validateCredentials = validate["credentials"],
   validateLog = validate["log"],
   {
@@ -243,24 +244,3 @@ watch(
   },
   { immediate },
 );
-
-export type { TCredentials, TFeed, TFonts, TImportmap, TLog, TPage };
-
-export {
-  add,
-  addChild,
-  atlas,
-  down,
-  feed,
-  fetching,
-  fonts,
-  importmap,
-  left,
-  nodes,
-  pages,
-  remove,
-  right,
-  up,
-  validateCredentials,
-  validateLog,
-};
