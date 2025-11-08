@@ -1,10 +1,15 @@
 {
   "name": "@vuebro/shared",
   "version": "1.1.53",
-  "description": "@vuebro/shared",
+  "description": "A shared TypeScript library providing common utilities, reactive data structures, and validation schemas for Vue-based applications in the VueBro ecosystem. Features include reactive data management with Vue 3, JSON schema validation with AJV, tree data structure utilities, and strongly-typed components for building hierarchical applications.",
   "keywords": [
-    "vuebro",
-    "shared"
+    "vue",
+    "reactive",
+    "typescript",
+    "json-schema",
+    "validation",
+    "tree-structure",
+    "shared-library"
   ],
   "homepage": "https://github.com/vuebro/shared#readme",
   "bugs": {
@@ -15,10 +20,7 @@
     "url": "git+https://github.com/vuebro/shared.git"
   },
   "license": "AGPL-3.0-or-later",
-  "author": {
-    "name": "Jerry Bruwes",
-    "email": "jbruwes@gmail.com"
-  },
+  "author": "Jerry Bruwes <jbruwes@gmail.com> (https://jbruwes.github.io)",
   "type": "module",
   "main": "dist/index.js",
   "files": [
@@ -30,18 +32,18 @@
   },
   "prettier": "@vuebro/configs/prettierrc",
   "dependencies": {
-    "@vuebro/flat-json-tree": "^2.1.29",
+    "@vuebro/flat-json-tree": "^2.1.30",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "consola": "^3.4.2",
     "json-schema-to-ts": "^3.1.1",
     "ofetch": "^1.5.1",
     "uuid-random": "^1.3.2",
-    "vue": "^3.5.23"
+    "vue": "^3.5.24"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",
-    "@vuebro/configs": "^1.1.63",
+    "@vuebro/configs": "^1.1.75",
     "eslint": "^9.39.1",
     "vite-plugin-static-copy": "^3.1.4"
   }
