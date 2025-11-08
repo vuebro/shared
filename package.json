@@ -1,6 +1,6 @@
 {
   "name": "@vuebro/shared",
-  "version": "1.1.53",
+  "version": "1.1.54",
   "description": "A shared TypeScript library providing common utilities, reactive data structures, and validation schemas for Vue-based applications in the VueBro ecosystem. Features include reactive data management with Vue 3, JSON schema validation with AJV, tree data structure utilities, and strongly-typed components for building hierarchical applications.",
   "keywords": [
     "vue",
