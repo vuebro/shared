@@ -54,6 +54,21 @@ interface IFlatJsonTree {
   right: (pId: string) => string | undefined;
   up: (pId: string) => void;
 }
+
+/**
+ * Fetches text content from a URL
+ *
+ * @param input - The URL to fetch content from
+ * @returns The fetched content or undefined if an error occurs
+ */
+export const fetching = async (input: string) => {
+  try {
+    return await ofetch(input);
+  } catch (error) {
+    consola.error(error);
+  }
+};
+
 export const useSharedStore = defineStore("shared", () => {
   /**
    * Generates a UUID
@@ -217,19 +232,6 @@ export const useSharedStore = defineStore("shared", () => {
     addChild,
     atlas,
     down,
-    /**
-     * Fetches text content from a URL
-     *
-     * @param input - The URL to fetch content from
-     * @returns The fetched content or undefined if an error occurs
-     */
-    fetching: async (input: string) => {
-      try {
-        return await ofetch(input);
-      } catch (error) {
-        consola.error(error);
-      }
-    },
     left,
     nodes,
     pages,
