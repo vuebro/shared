@@ -1,5 +1,5 @@
 export default {
-  $id: "urn:jsonschema:page",
+  $id: "page",
   additionalProperties: false,
   dynamicDefaults: { id: "uuid" },
   properties: {

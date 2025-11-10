@@ -1,7 +1,7 @@
 import type { JSONSchema } from "json-schema-to-ts";
 
 export default {
-  $id: "urn:jsonschema:credentials",
+  $id: "credentials",
   additionalProperties: {
     properties: {
       accessKeyId: { default: null, nullable: true, type: "string" },

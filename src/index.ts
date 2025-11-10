@@ -1,6 +1,5 @@
 import type { AnyValidateFunction } from "ajv/dist/core";
 import type { FromSchema } from "json-schema-to-ts";
-import type { ComputedRef } from "vue";
 
 import useFlatJsonTree from "@vuebro/flat-json-tree";
 import AJV from "ajv";
@@ -9,14 +8,14 @@ import { consola } from "consola/browser";
 import { ofetch } from "ofetch";
 import { acceptHMRUpdate, defineStore } from "pinia";
 import uid from "uuid-random";
-import { reactive, watch } from "vue";
+import { ref, watch } from "vue";
 
 import Credentials from "@/types/credentials";
-import Data from "@/types/data";
 import Feed from "@/types/feed";
 import Fonts from "@/types/fonts";
 import Importmap from "@/types/importmap";
 import Log from "@/types/log";
+import Nodes from "@/types/nodes";
 import Page from "@/types/page";
 
 export type TCredentials = FromSchema<typeof Credentials>;
@@ -43,17 +42,6 @@ export type TPage = FromSchema<typeof Page> & {
   title?: string;
   to?: string;
 };
-interface IFlatJsonTree {
-  add: (pId: string) => string | undefined;
-  addChild: (pId: string) => string | undefined;
-  down: (pId: string) => void;
-  left: (pId: string) => string | undefined;
-  nodes: ComputedRef<TPage[]>;
-  nodesMap: ComputedRef<Record<string, TPage>>;
-  remove: (pId: string) => string | undefined;
-  right: (pId: string) => string | undefined;
-  up: (pId: string) => void;
-}
 
 /**
  * Generates a UUID
@@ -62,7 +50,7 @@ interface IFlatJsonTree {
  */
 dynamicDefaults.DEFAULTS["uuid"] = () => uid;
 
-const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
+const schemas = [Credentials, Nodes, Page, Importmap, Feed, Fonts, Log],
   ajv = new AJV({
     code: { esm: true },
     coerceTypes: true,
@@ -72,7 +60,7 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
     useDefaults: true,
   }),
   immediate = true,
-  properties: PropertyDescriptorMap = {
+  properties = {
     $children: {
       /**
        * Returns enabled child nodes
@@ -172,9 +160,8 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
       },
     },
   },
-  validate: Record<string, AnyValidateFunction> = Object.fromEntries(
-    schemas.map(({ $id }) => [$id.split(":").pop(), ajv.getSchema($id)]),
-  );
+  validate: Record<string, AnyValidateFunction | undefined> =
+    Object.fromEntries(schemas.map(({ $id }) => [$id, ajv.getSchema($id)]));
 
 /**
  * Fetches text content from a URL
@@ -190,59 +177,33 @@ export const fetching = async (input: string) => {
     }
   },
   useSharedStore = defineStore("shared", () => {
-    const nodes = reactive([] as TPage[]),
-      sources = {
-        feed: reactive({} as TFeed),
-        fonts: reactive([] as TFonts),
-        importmap: reactive({} as TImportmap),
+    const data = {
+        credentials: ref({} as TCredentials),
+        feed: ref({} as TFeed),
+        fonts: ref([] as TFonts),
+        importmap: ref({} as TImportmap),
+        log: ref({} as TLog),
       },
-      {
-        add,
-        addChild,
-        down,
-        left,
-        nodes: pages,
-        nodesMap: atlas,
-        remove,
-        right,
-        up,
-      } = useFlatJsonTree(nodes) as IFlatJsonTree;
-
-    (["feed", "fonts", "importmap"] as const).forEach((key) => {
-      if (validate[key]) watch(sources[key], validate[key], { immediate });
+      tree = ref([] as TPage[]),
+      flatTree = useFlatJsonTree(tree);
+    Object.keys(data).forEach((key) => {
+      if (validate[key])
+        watch(data[key as keyof object], validate[key], { immediate });
     });
-
     watch(
-      pages,
-      async (value) => {
-        if (!(await validate["data"]?.(value))) {
-          nodes.length = 0;
-          nodes.push({} as TPage);
-        } else
-          value.forEach((element) => {
+      flatTree.nodes,
+      async (nodes) => {
+        if (!(await validate["nodes"]?.(nodes))) tree.value = [{}] as TPage[];
+        else
+          nodes.forEach((element) => {
             if (Object.keys(properties).some((key) => !(key in element)))
               Object.defineProperties(element, properties);
           });
       },
       { immediate },
     );
-
-    return {
-      add,
-      addChild,
-      atlas,
-      down,
-      left,
-      nodes,
-      pages,
-      remove,
-      right,
-      up,
-      ...sources,
-    };
-  }),
-  validateCredentials = validate["credentials"],
-  validateLog = validate["log"];
+    return { ...data, tree, ...flatTree };
+  });
 
 if (import.meta.hot)
   import.meta.hot.accept(acceptHMRUpdate(useSharedStore, import.meta.hot));

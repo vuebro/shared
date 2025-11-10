@@ -1,7 +1,7 @@
 import type { JSONSchema } from "json-schema-to-ts";
 
 export default {
-  $id: "urn:jsonschema:log",
+  $id: "log",
   additionalProperties: false,
   properties: {
     messages: {
