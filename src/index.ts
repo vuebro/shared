@@ -10,13 +10,13 @@ import { acceptHMRUpdate, defineStore } from "pinia";
 import uid from "uuid-random";
 import { ref, watch } from "vue";
 
-import Credentials from "@/types/credentials";
-import Feed from "@/types/feed";
-import Fonts from "@/types/fonts";
-import Importmap from "@/types/importmap";
-import Log from "@/types/log";
-import Nodes from "@/types/nodes";
-import Page from "@/types/page";
+import Credentials from "@/schemas/credentials";
+import Feed from "@/schemas/feed";
+import Fonts from "@/schemas/fonts";
+import Importmap from "@/schemas/importmap";
+import Log from "@/schemas/log";
+import Nodes from "@/schemas/nodes";
+import Page from "@/schemas/page";
 
 export type TCredentials = FromSchema<typeof Credentials>;
 export type TFeed = FromSchema<typeof Feed>;
