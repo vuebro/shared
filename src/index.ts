@@ -184,8 +184,6 @@ export const fetching = async (input: string) => {
     }
   },
   tree = reactive([] as TPage[]),
-  validateCredentials = validate["credentials"],
-  validateLog = validate["log"],
   { add, addChild, down, kvNodes, left, nodes, remove, right, up } =
     useFlatJsonTree(tree) as ReturnType<typeof useFlatJsonTree> & {
       kvNodes: ComputedRef<Record<string, TPage>>;
