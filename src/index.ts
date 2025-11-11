@@ -1,5 +1,6 @@
 import type { AnyValidateFunction } from "ajv/dist/core";
 import type { FromSchema } from "json-schema-to-ts";
+import type { ComputedRef } from "vue";
 
 import useFlatJsonTree from "@vuebro/flat-json-tree";
 import AJV from "ajv";
@@ -185,7 +186,10 @@ export const fetching = async (input: string) => {
         log: ref({} as TLog),
       },
       tree = ref([] as TPage[]),
-      flatTree = useFlatJsonTree(tree);
+      flatTree = useFlatJsonTree(tree) as ReturnType<typeof useFlatJsonTree> & {
+        kvNodes: ComputedRef<Record<string, TPage>>;
+        nodes: ComputedRef<TPage[]>;
+      };
     Object.keys(data).forEach((key) => {
       if (validate[key])
         watch(data[key as keyof object], validate[key], { immediate });
