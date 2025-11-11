@@ -1,5 +1,5 @@
 export default {
-  $id: "urn:jsonschema:feed",
+  $id: "feed",
   additionalProperties: false,
   properties: {
     feed_url: { type: "string" },

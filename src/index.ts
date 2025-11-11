@@ -10,13 +10,13 @@ import { ofetch } from "ofetch";
 import uid from "uuid-random";
 import { reactive, watch } from "vue";
 
-import Credentials from "./types/credentials";
-import Data from "./types/data";
-import Feed from "./types/feed";
-import Fonts from "./types/fonts";
-import Importmap from "./types/importmap";
-import Log from "./types/log";
-import Page from "./types/page";
+import Credentials from "@/schemas/credentials";
+import Feed from "@/schemas/feed";
+import Fonts from "@/schemas/fonts";
+import Importmap from "@/schemas/importmap";
+import Log from "@/schemas/log";
+import Nodes from "@/schemas/nodes";
+import Page from "@/schemas/page";
 
 export type TCredentials = FromSchema<typeof Credentials>;
 export type TFeed = FromSchema<typeof Feed>;
@@ -42,17 +42,6 @@ export type TPage = FromSchema<typeof Page> & {
   title?: string;
   to?: string;
 };
-interface IFlatJsonTree {
-  add: (pId: string) => string | undefined;
-  addChild: (pId: string) => string | undefined;
-  down: (pId: string) => void;
-  left: (pId: string) => string | undefined;
-  nodes: ComputedRef<TPage[]>;
-  nodesMap: ComputedRef<Record<string, TPage>>;
-  remove: (pId: string) => string | undefined;
-  right: (pId: string) => string | undefined;
-  up: (pId: string) => void;
-}
 
 /**
  * Generates a UUID
@@ -61,7 +50,7 @@ interface IFlatJsonTree {
  */
 dynamicDefaults.DEFAULTS["uuid"] = () => uid;
 
-const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
+const schemas = [Credentials, Nodes, Page, Importmap, Feed, Fonts, Log],
   ajv = new AJV({
     code: { esm: true },
     coerceTypes: true,
@@ -70,8 +59,15 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
     schemas,
     useDefaults: true,
   }),
+  data = {
+    credentials: reactive({} as TCredentials),
+    feed: reactive({} as TFeed),
+    fonts: reactive([] as TFonts),
+    importmap: reactive({} as TImportmap),
+    log: reactive({} as TLog),
+  },
   immediate = true,
-  properties: PropertyDescriptorMap = {
+  properties = {
     $children: {
       /**
        * Returns enabled child nodes
@@ -171,9 +167,8 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
       },
     },
   },
-  validate: Record<string, AnyValidateFunction> = Object.fromEntries(
-    schemas.map(({ $id }) => [$id.split(":").pop(), ajv.getSchema($id)]),
-  );
+  validate: Record<string, AnyValidateFunction | undefined> =
+    Object.fromEntries(schemas.map(({ $id }) => [$id, ajv.getSchema($id)]));
 
 /**
  * Fetches text content from a URL
@@ -181,61 +176,34 @@ const schemas = [Credentials, Data, Page, Importmap, Feed, Fonts, Log],
  * @param input - The URL to fetch content from
  * @returns The fetched content or undefined if an error occurs
  */
-export const feed = reactive({} as TFeed),
-  fetching = async (input: string) => {
+export const fetching = async (input: string) => {
     try {
       return await ofetch(input);
     } catch (error) {
       consola.error(error);
     }
   },
-  fonts = reactive([] as TFonts),
-  importmap = reactive({} as TImportmap),
-  nodes = reactive([] as TPage[]),
+  tree = reactive([] as TPage[]),
   validateCredentials = validate["credentials"],
   validateLog = validate["log"],
-  {
-    add,
-    addChild,
-    down,
-    left,
-    nodes: pages,
-    nodesMap: atlas,
-    remove,
-    right,
-    up,
-  } = useFlatJsonTree(nodes) as IFlatJsonTree;
+  { add, addChild, down, kvNodes, left, nodes, remove, right, up } =
+    useFlatJsonTree(tree) as ReturnType<typeof useFlatJsonTree> & {
+      kvNodes: ComputedRef<Record<string, TPage>>;
+      nodes: ComputedRef<TPage[]>;
+    },
+  { credentials, feed, fonts, importmap, log } = data;
+
+Object.keys(data).forEach((key) => {
+  if (validate[key])
+    watch(data[key as keyof object], validate[key], { immediate });
+});
 
 watch(
-  feed,
-  async (value) => {
-    await validate["feed"]?.(value);
-  },
-  { immediate },
-);
-
-watch(
-  fonts,
-  async (value) => {
-    await validate["fonts"]?.(value);
-  },
-  { immediate },
-);
-
-watch(
-  importmap,
-  async (value) => {
-    await validate["importmap"]?.(value);
-  },
-  { immediate },
-);
-
-watch(
-  pages,
+  nodes,
   async (value) => {
     if (!(await validate["data"]?.(value))) {
-      nodes.length = 0;
-      nodes.push({} as TPage);
+      tree.length = 0;
+      tree.push({} as TPage);
     } else
       value.forEach((element) => {
         if (Object.keys(properties).some((key) => !(key in element)))
