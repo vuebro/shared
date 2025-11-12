@@ -8,7 +8,7 @@ import dynamicDefaults from "ajv-keywords/dist/definitions/dynamicDefaults.js";
 import { consola } from "consola/browser";
 import { ofetch } from "ofetch";
 import uid from "uuid-random";
-import { reactive, watch } from "vue";
+import { reactive, ref, toRef, toRefs, watch } from "vue";
 
 import Credentials from "@/schemas/credentials";
 import Feed from "@/schemas/feed";
@@ -59,14 +59,17 @@ const schemas = [Credentials, Nodes, Page, Importmap, Feed, Fonts, Log],
     schemas,
     useDefaults: true,
   }),
-  data = {
-    credentials: reactive({} as TCredentials),
-    feed: reactive({} as TFeed),
-    fonts: reactive([] as TFonts),
-    importmap: reactive({} as TImportmap),
-    log: reactive({} as TLog),
-  },
+  data = toRefs(
+    reactive({
+      credentials: {} as TCredentials,
+      feed: {} as TFeed,
+      fonts: [] as TFonts,
+      importmap: {} as TImportmap,
+      log: {} as TLog,
+    }),
+  ),
   immediate = true,
+  nodes = "nodes",
   properties = {
     $children: {
       /**
@@ -167,6 +170,7 @@ const schemas = [Credentials, Nodes, Page, Importmap, Feed, Fonts, Log],
       },
     },
   },
+  tree = ref([] as TPage[]),
   validate: Record<string, AnyValidateFunction | undefined> =
     Object.fromEntries(schemas.map(({ $id }) => [$id, ajv.getSchema($id)]));
 
@@ -183,13 +187,14 @@ export const fetching = async (input: string) => {
       consola.error(error);
     }
   },
-  tree = reactive([] as TPage[]),
-  { add, addChild, down, kvNodes, left, nodes, remove, right, up } =
-    useFlatJsonTree(tree) as ReturnType<typeof useFlatJsonTree> & {
+  sharedStore = reactive({
+    ...data,
+    tree,
+    ...(useFlatJsonTree(tree) as ReturnType<typeof useFlatJsonTree> & {
       kvNodes: ComputedRef<Record<string, TPage>>;
       nodes: ComputedRef<TPage[]>;
-    },
-  { credentials, feed, fonts, importmap, log } = data;
+    }),
+  });
 
 Object.keys(data).forEach((key) => {
   if (validate[key])
@@ -197,12 +202,10 @@ Object.keys(data).forEach((key) => {
 });
 
 watch(
-  nodes,
+  toRef(sharedStore, nodes),
   async (value) => {
-    if (!(await validate["data"]?.(value))) {
-      tree.length = 0;
-      tree.push({} as TPage);
-    } else
+    if (!(await validate[nodes]?.(value))) tree.value = [{}] as TPage[];
+    else
       value.forEach((element) => {
         if (Object.keys(properties).some((key) => !(key in element)))
           Object.defineProperties(element, properties);
