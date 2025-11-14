@@ -1,35 +1,31 @@
 # @vuebro/shared
 
-A shared library providing common utilities, reactive data structures, and validation schemas for Vue-based applications, particularly those built with the VueBro ecosystem.
+A TypeScript library providing reactive data structures, JSON schema validation, and tree utilities for Vue-based applications in the VueBro ecosystem.
 
 ## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
 - [Installation](#installation)
-- [Usage](#usage)
 - [API Reference](#api-reference)
-- [Data Types](#data-types)
-- [Development](#development)
+- [Usage](#usage)
+- [Data Validation](#data-validation)
+- [Tree Navigation](#tree-navigation)
 - [Contributing](#contributing)
 - [License](#license)
 
 ## Overview
 
-This library provides a set of shared reactive data structures and validation utilities that are commonly used across Vue applications. It includes:
-
-- Reactive data structures with automatic validation
-- JSON Schema-based type validation using AJV
-- Tree data structure with navigation utilities
-- Common data types for pages, feeds, fonts, import maps, and more
+`@vuebro/shared` is a shared TypeScript library that provides common utilities, reactive data structures, and validation schemas for Vue-based applications, particularly those built with the VueBro ecosystem. It leverages Vue 3's reactivity system combined with JSON Schema validation to create a robust foundation for managing application state.
 
 ## Features
 
-- **Reactive Data Management**: Uses Vue's reactivity system to manage shared data structures
+- **Reactive Data Management**: Uses Vue 3's reactivity system to manage shared data structures
 - **JSON Schema Validation**: Validates data against predefined schemas using AJV
 - **Tree Data Structure**: Provides utilities for working with hierarchical data
 - **Type Safety**: Strong typing with TypeScript and JSON Schema integration
 - **Vue 3 Compatibility**: Built specifically for Vue 3's Composition API
+- **Automatic Property Computation**: Automatically computes properties for tree nodes
 
 ## Installation
 
@@ -37,86 +33,49 @@ This library provides a set of shared reactive data structures and validation ut
 npm install @vuebro/shared
 ```
 
-## Usage
-
-```typescript
-import {
-  feed,
-  fonts,
-  importmap,
-  pages,
-  add,
-  addChild,
-  remove,
-  up,
-  down,
-  left,
-  right,
-  validateCredentials,
-  validateLog,
-  uid,
-  getFontsObjectFromArray,
-} from "@vuebro/shared";
-
-// Use reactive data structures
-console.log(pages); // Reactive array of page objects
-
-// Add a new page to the tree structure
-const newPageId = add("parentId");
-
-// Validate credentials
-const isValid = validateCredentials(someCredentials);
-
-// Generate unique IDs
-const id = uid();
-
-// Convert fonts array to object mapping
-const fontsObject = getFontsObjectFromArray(["Arial", "Helvetica"]);
-```
-
 ## API Reference
 
-### Reactive Data Structures
+### Exports
 
-- `feed`: Reactive object for feed data
-- `fonts`: Reactive array of font names
-- `importmap`: Reactive object for import maps
-- `pages`: Reactive array of pages with tree navigation
-- `atlas`: Computed map of nodes by ID
+- Reactive data structures: `feed`, `fonts`, `importmap`, `tree`, `credentials`, `log`
+- Tree navigation functions: `add`, `addChild`, `remove`, `up`, `down`, `left`, `right`, `move`
+- Validation functions: `validateCredentials`, `validateLog`, and others
+- Utility functions: `uid`, `fetching`
+- TypeScript types: `TCredentials`, `TFeed`, `TFonts`, `TImportmap`, `TLog`, `TPage`
 
-### Tree Navigation
+## Usage
 
-- `add(parentId)`: Add a new node as a child
-- `addChild(parentId)`: Add a child node
-- `remove(nodeId)`: Remove a node
-- `up(nodeId)`: Move node up in the sibling list
-- `down(nodeId)`: Move node down in the sibling list
-- `left(nodeId)`: Move node left in the hierarchy
-- `right(nodeId)`: Move node right in the hierarchy
+### Basic Usage
 
-### Utilities
+```typescript
+import { sharedStore, fetching } from '@vuebro/shared';
 
-- `uid()`: Generate a unique identifier
-- `getFontsObjectFromArray(fonts)`: Convert font array to object mapping
-- `fetchText(url, defaultText)`: Fetch text content from a URL with fallback
+// Access reactive data structures
+const { feed, fonts, importmap, tree, credentials, log } = sharedStore;
 
-### Validators
+// Fetch content from a URL
+const content = await fetching('https://example.com/data.json');
+```
 
-- `validateCredentials`: Validate credentials against schema
-- `validateLog`: Validate log entries against schema
+### Working with Tree Data
 
-## Data Types
+```typescript
+import { sharedStore } from '@vuebro/shared';
 
-The library exports the following TypeScript types:
+// Add a new node to the tree
+const newPage = {
+  name: 'New Page',
+  enabled: true,
+  children: []
+};
+sharedStore.add(newPage);
 
-- `TPage`: Page data structure with hierarchical properties
-- `TCredentials`: Credentials data structure
-- `TFeed`: Feed data structure
-- `TFonts`: Fonts data structure
-- `TImportmap`: Import map data structure
-- `TLog`: Log data structure
+// Navigate the tree
+const rootNodes = sharedStore.nodes.value;
+const allNodesById = sharedStore.kvNodes.value;
+```
 
-### Page Enhancements
+### Page Computed Properties
 
 Each page in the tree automatically gets enhanced with computed properties:
 
@@ -129,43 +88,72 @@ Each page in the tree automatically gets enhanced with computed properties:
 - `title`: Page title (header or name)
 - `to`: Full URL path
 
-## Development
+```typescript
+import { sharedStore } from '@vuebro/shared';
 
-### Prerequisites
-
-- Node.js (v18 or higher)
-- npm or yarn
-
-### Scripts
-
-```bash
-npm run build  # Compile TypeScript to JavaScript
-npm run lint   # Lint the codebase
+// Access computed properties on a page
+const page = sharedStore.tree[0];
+console.log(page.title);  // Combined title (header or name)
+console.log(page.path);   // URL path based on branch
+console.log(page.$children); // Enabled child nodes only
 ```
 
-### Building from Source
+## Data Validation
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Build the project: `npm run build`
+The library automatically validates all data against predefined JSON schemas. Each schema ensures data integrity and type safety:
+
+- **Credentials**: AWS credentials and access information
+- **Feed**: RSS/Atom feed data
+- **Fonts**: Font configurations
+- **Importmap**: JavaScript import maps
+- **Log**: Logging and event data
+- **Page**: Page and navigation data with hierarchical properties
+- **Nodes**: Array of page nodes
+
+## Tree Navigation
+
+The library provides a complete set of functions for navigating and manipulating tree structures:
+
+- `add(parentId)`: Add a new node as a child
+- `addChild(parentId)`: Add a child node
+- `remove(nodeId)`: Remove a node
+- `up(nodeId)`: Move node up in the sibling list
+- `down(nodeId)`: Move node down in the sibling list
+- `left(nodeId)`: Move node left in the hierarchy
+- `right(nodeId)`: Move node right in the hierarchy
+- `move(nodeId, position)`: Move a node to a specific position
 
 ## Contributing
-
-We welcome contributions to this project! Here's how you can help:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
-4. Commit your changes (`git commit -m 'Add some amazing feature'`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a Pull Request
+4. Run the tests (`npm test`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
 
-Please make sure to update tests as appropriate and follow the existing code style.
+### Building
+
+```bash
+npm run build  # Compiles TypeScript to JavaScript using tsc and tsc-alias
+```
+
+### Linting
+
+```bash
+npm run lint   # Lints the codebase with ESLint
+```
+
+## Dependencies
+
+- `vue`: Vue 3 framework for reactivity
+- `ajv`: JSON schema validator
+- `json-schema-to-ts`: Type generation from JSON schemas
+- `@vuebro/flat-json-tree`: Tree data structure utilities
+- `ofetch`: HTTP client
+- `uuid-random`: UUID generation
 
 ## License
 
 This project is licensed under the AGPL-3.0-or-later License - see the [LICENSE](LICENSE) file for details.
-
-## Author
-
-Jerry Bruwes <jbruwes@gmail.com>
