@@ -31,7 +31,7 @@ export default {
     description: { default: null, nullable: true, type: "string" },
     enabled: { default: true, type: "boolean" },
     flat: { default: true, type: "boolean" },
-    head: { default: {}, type: "object" },
+    head: { default: null, nullable: true, type: "object" },
     header: { type: "string" },
     icon: { type: "string" },
     id: { type: "string" },
