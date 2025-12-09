@@ -11,17 +11,11 @@ import uid from "uuid-random";
 import { reactive, ref, toRef, toRefs, watch } from "vue";
 
 import Credentials from "@/schemas/credentials";
-import Feed from "@/schemas/feed";
-import Fonts from "@/schemas/fonts";
-import Importmap from "@/schemas/importmap";
 import Log from "@/schemas/log";
 import Nodes from "@/schemas/nodes";
 import Page from "@/schemas/page";
 
 export type TCredentials = FromSchema<typeof Credentials>;
-export type TFeed = FromSchema<typeof Feed>;
-export type TFonts = FromSchema<typeof Fonts>;
-export type TImportmap = FromSchema<typeof Importmap>;
 export type TLog = FromSchema<typeof Log>;
 export type TPage = FromSchema<typeof Page> & {
   $children: TPage[];
@@ -43,14 +37,9 @@ export type TPage = FromSchema<typeof Page> & {
   to?: string;
 };
 
-/**
- * Generates a UUID
- *
- * @returns A generated UUID
- */
 dynamicDefaults.DEFAULTS["uuid"] = () => uid;
 
-const schemas = [Credentials, Nodes, Page, Importmap, Feed, Fonts, Log],
+const schemas = [Credentials, Nodes, Page, Log],
   ajv = new AJV({
     code: { esm: true },
     coerceTypes: true,
@@ -62,9 +51,6 @@ const schemas = [Credentials, Nodes, Page, Importmap, Feed, Fonts, Log],
   data = toRefs(
     reactive({
       credentials: {} as TCredentials,
-      feed: {} as TFeed,
-      fonts: [] as TFonts,
-      importmap: {} as TImportmap,
       log: {} as TLog,
     }),
   ),
@@ -72,71 +58,36 @@ const schemas = [Credentials, Nodes, Page, Importmap, Feed, Fonts, Log],
   nodes = "nodes",
   properties = {
     $children: {
-      /**
-       * Returns enabled child nodes
-       *
-       * @returns The enabled child nodes
-       */
       get(this: TPage) {
         return this.children.filter(({ enabled }) => enabled);
       },
     },
     $index: {
-      /**
-       * Returns index among siblings
-       *
-       * @returns The index of this node among its siblings
-       */
       get(this: TPage) {
         return this.$siblings.findIndex(({ id }) => this.id === id);
       },
     },
     $next: {
-      /**
-       * Returns next sibling among enabled nodes
-       *
-       * @returns The next sibling node or undefined if none exists
-       */
       get(this: TPage) {
         return this.$siblings[this.$index + 1];
       },
     },
     $prev: {
-      /**
-       * Returns previous sibling among enabled nodes
-       *
-       * @returns The previous sibling node or undefined if none exists
-       */
       get(this: TPage) {
         return this.$siblings[this.$index - 1];
       },
     },
     $siblings: {
-      /**
-       * Returns all enabled siblings
-       *
-       * @returns The enabled sibling nodes
-       */
       get(this: TPage) {
         return this.siblings.filter(({ enabled }) => enabled);
       },
     },
     i: {
-      /**
-       * Returns icon class name
-       *
-       * @returns The icon class name or undefined if no icon is set
-       */
       get(this: TPage) {
         return this.icon && `i-${this.icon}`;
       },
     },
     path: {
-      /**
-       * Returns URL path based on branch
-       *
-       * @returns The path or undefined if any branch segment has no name
-       */
       get(this: TPage) {
         const branch = this.branch.slice(1);
         return branch.some(({ name }) => !name)
@@ -148,11 +99,6 @@ const schemas = [Credentials, Nodes, Page, Importmap, Feed, Fonts, Log],
       },
     },
     title: {
-      /**
-       * Returns page title (header or name)
-       *
-       * @returns The page title
-       */
       get(this: TPage) {
         return ["", undefined].includes(this.header)
           ? (this.name ?? "")
@@ -160,11 +106,6 @@ const schemas = [Credentials, Nodes, Page, Importmap, Feed, Fonts, Log],
       },
     },
     to: {
-      /**
-       * Returns full URL path
-       *
-       * @returns The full URL path or undefined if path is not defined
-       */
       get(this: TPage) {
         return this.path?.replace(/^\/?/, "/").replace(/\/?$/, "/");
       },
@@ -174,12 +115,6 @@ const schemas = [Credentials, Nodes, Page, Importmap, Feed, Fonts, Log],
   validate: Record<string, AnyValidateFunction | undefined> =
     Object.fromEntries(schemas.map(({ $id }) => [$id, ajv.getSchema($id)]));
 
-/**
- * Fetches text content from a URL
- *
- * @param input - The URL to fetch content from
- * @returns The fetched content or undefined if an error occurs
- */
 export const fetching = async (input: string) => {
     try {
       return await ofetch(input);
