@@ -25,7 +25,6 @@ export type TPage = FromSchema<typeof Page> & {
   $siblings: TPage[];
   branch: TPage[];
   children: TPage[];
-  i?: string;
   id: string;
   index: number;
   next?: TPage;
@@ -33,7 +32,6 @@ export type TPage = FromSchema<typeof Page> & {
   path?: string;
   prev?: TPage;
   siblings: TPage[];
-  title?: string;
   to?: string;
 };
 
@@ -59,7 +57,9 @@ const schemas = [Credentials, Nodes, Page, Log],
   properties = {
     $children: {
       get(this: TPage) {
-        return this.children.filter(({ enabled }) => enabled);
+        return this.children.filter(
+          ({ frontmatter: { hidden } }: TPage) => !hidden,
+        );
       },
     },
     $index: {
@@ -79,12 +79,7 @@ const schemas = [Credentials, Nodes, Page, Log],
     },
     $siblings: {
       get(this: TPage) {
-        return this.siblings.filter(({ enabled }) => enabled);
-      },
-    },
-    i: {
-      get(this: TPage) {
-        return this.icon && `i-${this.icon}`;
+        return this.siblings.filter(({ frontmatter: { hidden } }) => !hidden);
       },
     },
     path: {
@@ -96,13 +91,6 @@ const schemas = [Credentials, Nodes, Page, Log],
               .map(({ name }) => name)
               .join("/")
               .replace(/ /g, "_");
-      },
-    },
-    title: {
-      get(this: TPage) {
-        return ["", undefined].includes(this.header)
-          ? (this.name ?? "")
-          : this.header;
       },
     },
     to: {
